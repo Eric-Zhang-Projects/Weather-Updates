@@ -10,13 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Component
-public class RegisterUser {
-    
+public class LoginUser {
+
     private String username;
     private String password;
-    private String name;
-    private String city;
-    private String zip;
-    private String email;
-
+    
 }

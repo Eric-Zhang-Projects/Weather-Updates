@@ -1,7 +1,6 @@
 package com.example.backend.Responses;
 
-import org.springframework.stereotype.Component;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,14 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Component
-public class RegisterUser {
+@AllArgsConstructor
+public class AuthenticationRequest {
     
     private String username;
     private String password;
-    private String name;
-    private String city;
-    private String zip;
-    private String email;
-
 }
