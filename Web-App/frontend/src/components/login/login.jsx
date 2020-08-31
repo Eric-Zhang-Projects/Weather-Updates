@@ -1,5 +1,7 @@
 import React from "react";
 import loginLogo from "../../images/loginLogo.png";
+import { withRouter } from 'react-router-dom';
+import Axios from "axios";
 
 export class Login extends React.Component {
 
@@ -16,19 +18,19 @@ export class Login extends React.Component {
     }
 
     handleSubmit = (event) =>{
-       // alert("Form submit on" + JSON.stringify(this.state));
-       fetch('http://localhost:8080/authenticate', {
-           method: 'POST',
-           body: JSON.stringify(this.state),
-           headers: {
-            'Content-Type': 'application/json'
-           }           
-       }).then(function(response) {
-           console.log(response);
-           //contentType: 'application/json';
-           return response.json();
-       }).catch(error => 
+        event.preventDefault();
+
+        Axios.post('http://localhost:8080/authenticate', {
+            username: this.state.username,
+            password: this.state.password
+        }).then (res => {
+            console.log(res.data.jwt);
+            localStorage.setItem('jwt', res.data.jwt);
+            this.props.history.push('/dashboard');
+        }).catch(error => 
         alert("Bad Credentials", error));
+        //this.props.history.push('/login');
+
     }
 
     render() {

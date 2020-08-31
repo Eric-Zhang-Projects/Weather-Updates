@@ -2,11 +2,13 @@ package com.example.backend.Services;
 
 import com.example.backend.Responses.AuthenticationRequest;
 import com.example.backend.Responses.AuthenticationResponse;
+import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.RegisterUser;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -37,6 +40,12 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private DashboardResponse dashboardResponse;
+
+    @Autowired
+    private AuthenticationResponse authenticationResponse;
+
     @RequestMapping("/register")
     public String Register(){
         return "registered!";
@@ -48,8 +57,15 @@ public class LoginController {
         return "logged in!";
     }
 
+    @RequestMapping("/dashboard")
+    public DashboardResponse Dashboard(){
+        DashboardResponse dashboardResponse = new DashboardResponse();
+        dashboardResponse.setGreeting("hey bro whats good");
+        return dashboardResponse;
+    }
+
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+    public /*ResponseEntity<?>*/ AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
         try{
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())
@@ -61,8 +77,15 @@ public class LoginController {
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        System.out.println("creating new jwt:" + jwt);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Access-Control-Expose-Headers", 
+          "Authorization");
+          //return ResponseEntity.ok(new AuthenticationResponse(jwt));
+          AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+          authenticationResponse.setJwt(jwt);
+         return authenticationResponse;
+        //return ResponseEntity.ok().headers(responseHeaders).body(new AuthenticationResponse(jwt));
     }
 
     
