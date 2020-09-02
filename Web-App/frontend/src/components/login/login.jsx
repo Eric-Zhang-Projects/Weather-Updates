@@ -1,7 +1,6 @@
 import React from "react";
 import loginLogo from "../../images/loginLogo.png";
-import { withRouter } from 'react-router-dom';
-import Axios from "axios";
+import axios from "axios";
 
 export class Login extends React.Component {
 
@@ -20,7 +19,7 @@ export class Login extends React.Component {
     handleSubmit = (event) =>{
         event.preventDefault();
 
-        Axios.post('http://localhost:8080/authenticate', {
+        axios.post('http://localhost:8080/authenticate', {
             username: this.state.username,
             password: this.state.password
         }).then (res => {

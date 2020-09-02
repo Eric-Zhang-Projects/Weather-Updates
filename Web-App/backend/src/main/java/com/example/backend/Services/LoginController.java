@@ -1,5 +1,9 @@
 package com.example.backend.Services;
 
+import java.util.List;
+
+import com.example.backend.Documents.UsersDocument;
+import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Responses.AuthenticationRequest;
 import com.example.backend.Responses.AuthenticationResponse;
 import com.example.backend.Responses.DashboardResponse;
@@ -9,6 +13,7 @@ import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,18 +28,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins= "http://localhost:3000")
-//@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
+// @RequestMapping("/api")
 @Service
 public class LoginController {
 
     @Autowired
     private RegisterUser registerUser;
 
-    @Autowired 
+    @Autowired
+    private UsersDocument usersDocument;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired 
+    @Autowired
     private MyUserDetailsService myUserDetailsService;
 
     @Autowired
@@ -46,9 +54,20 @@ public class LoginController {
     @Autowired
     private AuthenticationResponse authenticationResponse;
 
-    @RequestMapping("/register")
-    public String Register(){
-        return "registered!";
+    @Autowired
+    private UsersRepo usersRepo;
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity <?> Register(@RequestBody RegisterUser registerUser) {
+        UsersDocument usersDocument = new UsersDocument();
+        usersDocument.setName(registerUser.getName());
+        usersDocument.setEmail(registerUser.getEmail());
+        usersDocument.setUsername(registerUser.getUsername());
+        usersDocument.setPassword(registerUser.getPassword());
+        usersDocument.setCity("");
+        usersDocument.setZip("");
+        usersRepo.save(usersDocument);
+        return ResponseEntity.ok(registerUser);
     }
 
     @RequestMapping("/login")
@@ -59,13 +78,14 @@ public class LoginController {
 
     @RequestMapping("/dashboard")
     public DashboardResponse Dashboard(){
+        System.out.println("hit dashboard");
         DashboardResponse dashboardResponse = new DashboardResponse();
         dashboardResponse.setGreeting("hey bro whats good");
         return dashboardResponse;
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public /*ResponseEntity<?>*/ AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
         try{
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())

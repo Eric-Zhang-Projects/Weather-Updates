@@ -1,4 +1,4 @@
-package com.example.backend.Responses;
+package com.example.backend.Documents;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,14 +12,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Component
-public class RegisterUser {
+@Document(collection = "Users")
+public class UsersDocument {
     
     @Id
+    private String id;
+
     private String username;
     private String password;
     private String name;
     private String city;
     private String zip;
     private String email;
-
 }

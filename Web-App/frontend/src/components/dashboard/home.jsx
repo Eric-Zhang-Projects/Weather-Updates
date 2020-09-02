@@ -24,17 +24,19 @@ export class Home extends React.Component {
             this.props.history.push('/login');
         }
 
-        axios.get('http://localhost:8080/dashboard', { headers: { Authorization: `Bearer ${jwt}`}})
-        .then( result => {
-            console.log("HOME");
-            console.log(result.data.greeting);
-            this.setState({
-                info: result.data.greeting
-            });
+        console.log('home jwt: ' + jwt);
+
+         axios.get('http://localhost:8080/dashboard', { headers: { Authorization: `Bearer ${jwt}`}})
+         .then( result => {
+             console.log("HOME");
+        //     console.log(result.data.greeting);
+        //     this.setState({
+        //         info: result.data.greeting
+        //     });
         }).catch(err => {
             console.log(err.messasge);
             alert("Failure");
-            this.props.history.push('/login');
+         //   this.props.history.push('/login');
         });
 
     }
