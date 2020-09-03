@@ -27,13 +27,31 @@ export class Register extends React.Component {
             username: this.state.username,
             password: this.state.password
         }).then (res => {
-            console.log(res.data);
-            alert("New User successfully created! Please login");
-            this.props.history.push('/login');
+            console.log(res.data.duplicateEmail + " " + res.data.duplicateUsername);
+            if(!res.data.duplicateUsername && !res.data.duplicateEmail){
+                alert("New User successfully created! Please login");
+                this.props.history.push('/login');
+            }
+            else{
+                var duplicate = '';
+                if (res.data.duplicateUsername){
+                    console.log(duplicate);
+                    duplicate.concat(res.data.duplicateUsername).concat("\n");
+                    console.log(duplicate);
+                }
+                if (res.data.duplicateEmail){
+                    console.log(duplicate);
+                    duplicate.concat(res.data.duplicateEmail);
+                    console.log(duplicate);
+
+                }
+                alert(duplicate);
+                this.props.history.push('/register');
+            }
         }).catch(error => 
         alert("Failed to register", error));
         this.props.history.push('/register');
-
+    
     }
 
     render() {

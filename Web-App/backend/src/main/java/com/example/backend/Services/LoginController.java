@@ -7,7 +7,9 @@ import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Responses.AuthenticationRequest;
 import com.example.backend.Responses.AuthenticationResponse;
 import com.example.backend.Responses.DashboardResponse;
-import com.example.backend.Responses.RegisterUser;
+import com.example.backend.Responses.DuplicateUserError;
+import com.example.backend.Responses.LoginUser;
+import com.example.backend.Responses.User;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    private RegisterUser registerUser;
+    private User user;
 
     @Autowired
     private UsersDocument usersDocument;
@@ -58,16 +60,38 @@ public class LoginController {
     private UsersRepo usersRepo;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity <?> Register(@RequestBody RegisterUser registerUser) {
+    public ResponseEntity <?> Register(@RequestBody User user) {
         UsersDocument usersDocument = new UsersDocument();
-        usersDocument.setName(registerUser.getName());
-        usersDocument.setEmail(registerUser.getEmail());
-        usersDocument.setUsername(registerUser.getUsername());
-        usersDocument.setPassword(registerUser.getPassword());
+        usersDocument.setName(user.getName());
+        usersDocument.setEmail(user.getEmail());
+        usersDocument.setUsername(user.getUsername());
+        usersDocument.setPassword(user.getPassword());
         usersDocument.setCity("");
         usersDocument.setZip("");
-        usersRepo.save(usersDocument);
-        return ResponseEntity.ok(registerUser);
+        DuplicateUserError duplicateUserError = new DuplicateUserError();
+        List<UsersDocument> listofExistingUsers = usersRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+        System.out.println("size of list: " + listofExistingUsers.size());
+         if (listofExistingUsers.isEmpty()){
+             System.out.println("Unique user registration");
+            // usersRepo.save(usersDocument);
+         }
+         else{
+             System.out.println("checking list");
+            listofExistingUsers.forEach((existingUser) ->{
+                System.out.println("exist user: " + existingUser.getUsername() + " " + user.getUsername());
+                if (existingUser.getUsername().equals(user.getUsername())){
+                    System.out.println("dup username");
+                    duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
+                }
+                if (existingUser.getEmail().equals(user.getEmail())){
+                    System.out.println("dup emial");
+                    duplicateUserError.setDuplicateEmail("Current Email is already in use");
+                }
+            }); 
+            return ResponseEntity.ok(duplicateUserError); 
+         }
+         return ResponseEntity.ok(duplicateUserError);
+
     }
 
     @RequestMapping("/login")
@@ -94,6 +118,10 @@ public class LoginController {
             throw new Exception("Incorrect username or password", e);
         }
 
+        if (!usersRepo.findById(authenticationRequest.getUsername()).isEmpty()){
+            //username is 
+        }
+        
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtUtil.generateToken(userDetails);

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Component
-public class RegisterUser {
+public class User {
     
     @Id
     private String username;
