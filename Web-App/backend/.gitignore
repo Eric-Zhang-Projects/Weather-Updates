@@ -34,4 +34,4 @@ build/
 
 
 #keys
-/src/main/resources/application.properties
+/application.properties
