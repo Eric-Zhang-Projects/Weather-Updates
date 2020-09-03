@@ -35,15 +35,10 @@ export class Register extends React.Component {
             else{
                 var duplicate = '';
                 if (res.data.duplicateUsername){
-                    console.log(duplicate);
-                    duplicate.concat(res.data.duplicateUsername).concat("\n");
-                    console.log(duplicate);
+                    duplicate = res.data.duplicateUsername + "\n";
                 }
                 if (res.data.duplicateEmail){
-                    console.log(duplicate);
-                    duplicate.concat(res.data.duplicateEmail);
-                    console.log(duplicate);
-
+                    duplicate += res.data.duplicateEmail;
                 }
                 alert(duplicate);
                 this.props.history.push('/register');

@@ -2,6 +2,7 @@ package com.example.backend.Services.SecurityConfiguration;
 
 import java.util.ArrayList;
 
+import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Responses.LoginUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,13 @@ public class MyUserDetailsService implements UserDetailsService{
 
     @Autowired
     private LoginUser loginUser;
+
+    @Autowired
+    private UsersRepo usersRepo;
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUsername("user");
-        loginUser.setPassword("pass");
-        return new User(loginUser.getUsername(), loginUser.getPassword(), new ArrayList<>());
-    
+        return new User(username, usersRepo.findByUsername(username).getPassword(), new ArrayList<>());
     }
     
 }

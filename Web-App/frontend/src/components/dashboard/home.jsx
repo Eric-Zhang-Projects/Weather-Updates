@@ -24,18 +24,22 @@ export class Home extends React.Component {
             this.props.history.push('/login');
         }
 
-        console.log('home jwt: ' + jwt);
+        console.log('passed in jwt:\n' + jwt);
 
-         axios.get('http://localhost:8080/dashboard', { headers: { Authorization: `Bearer ${jwt}`}})
+         axios.get('http://localhost:8080/dashboard', { headers: {'Authorization': `Bearer ${jwt}`,
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
+        'Access-Control-Allow-Headers': 'Authorization'}})
+         //`Bearer ${jwt}`
          .then( result => {
              console.log("HOME");
-        //     console.log(result.data.greeting);
+             console.log(result.data.greeting);
         //     this.setState({
         //         info: result.data.greeting
         //     });
         }).catch(err => {
             console.log(err.messasge);
-            alert("Failure");
+            alert("Valid credentials but failed to log in");
          //   this.props.history.push('/login');
         });
 

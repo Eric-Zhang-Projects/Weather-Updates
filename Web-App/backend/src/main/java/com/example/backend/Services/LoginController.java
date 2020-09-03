@@ -70,21 +70,16 @@ public class LoginController {
         usersDocument.setZip("");
         DuplicateUserError duplicateUserError = new DuplicateUserError();
         List<UsersDocument> listofExistingUsers = usersRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-        System.out.println("size of list: " + listofExistingUsers.size());
          if (listofExistingUsers.isEmpty()){
              System.out.println("Unique user registration");
-            // usersRepo.save(usersDocument);
+             usersRepo.save(usersDocument);
          }
          else{
-             System.out.println("checking list");
             listofExistingUsers.forEach((existingUser) ->{
-                System.out.println("exist user: " + existingUser.getUsername() + " " + user.getUsername());
                 if (existingUser.getUsername().equals(user.getUsername())){
-                    System.out.println("dup username");
                     duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
                 }
                 if (existingUser.getEmail().equals(user.getEmail())){
-                    System.out.println("dup emial");
                     duplicateUserError.setDuplicateEmail("Current Email is already in use");
                 }
             }); 
@@ -115,24 +110,27 @@ public class LoginController {
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())
             );
         } catch (BadCredentialsException e){
+            System.out.println("bad login");
             throw new Exception("Incorrect username or password", e);
         }
 
-        if (!usersRepo.findById(authenticationRequest.getUsername()).isEmpty()){
-            //username is 
+        if (usersRepo.findByUsernameAndPassword(authenticationRequest.getUsername(), authenticationRequest.getPassword()) == null){
+           System.out.println("Bad Login Credentials");
+            return null;
         }
         
+        System.out.println("Valid Login Credentials");
+
         final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtUtil.generateToken(userDetails);
         System.out.println("creating new jwt:" + jwt);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Expose-Headers", 
-          "Authorization");
+        responseHeaders.set("Access-Control-Expose-Headers", "Authorization");
           //return ResponseEntity.ok(new AuthenticationResponse(jwt));
-          AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-          authenticationResponse.setJwt(jwt);
-         return authenticationResponse;
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+        authenticationResponse.setJwt(jwt);
+        return authenticationResponse;
         //return ResponseEntity.ok().headers(responseHeaders).body(new AuthenticationResponse(jwt));
     }
 

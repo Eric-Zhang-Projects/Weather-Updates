@@ -23,9 +23,15 @@ export class Login extends React.Component {
             username: this.state.username,
             password: this.state.password
         }).then (res => {
+            if (res.data.jwt == null){
+                alert("Could not login for given username and password combination");
+                this.props.history.push('/login');
+            }
+            else{
             console.log(res.data.jwt);
             localStorage.setItem('jwt', res.data.jwt);
             this.props.history.push('/dashboard');
+            }
         }).catch(error => 
         alert("Bad Credentials", error));
         //this.props.history.push('/login');
