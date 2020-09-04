@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 // @RequestMapping("/api")
 @Service
 public class LoginController {
@@ -96,23 +96,32 @@ public class LoginController {
     }
 
     @RequestMapping("/dashboard")
-    public DashboardResponse Dashboard(){
+    public ResponseEntity<?> Dashboard(){
         System.out.println("hit dashboard");
         DashboardResponse dashboardResponse = new DashboardResponse();
         dashboardResponse.setGreeting("hey bro whats good");
-        return dashboardResponse;
+        // HttpHeaders responseHeaders = new HttpHeaders();
+        // responseHeaders.set("Access-Control-Allow-Origin", "*");
+        // responseHeaders.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        // responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
+        // responseHeaders.set("Access-Control-Allow-Headers", "Authorization, origin, accept, x-requested-with, content-type");
+        // responseHeaders.set("Access-Control-Allow-Credentials", "true");
+        // return ResponseEntity.ok().headers(responseHeaders).body(dashboardResponse);
+        return ResponseEntity.ok(dashboardResponse);
     }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
-        try{
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())
-            );
-        } catch (BadCredentialsException e){
-            System.out.println("bad login");
-            throw new Exception("Incorrect username or password", e);
-        }
+    public /*AuthenticationResponse*/ ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+       
+       //commented out- when entering bad login credentials routes through here instead of if statement below with print statemnt "bad login etc"
+        // try{
+        //     authenticationManager.authenticate(
+        //         new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword())
+        //     );
+        // } catch (BadCredentialsException e){
+        //     System.out.println("bad login");
+        //     throw new Exception("Incorrect username or password", e);
+        // }
 
         if (usersRepo.findByUsernameAndPassword(authenticationRequest.getUsername(), authenticationRequest.getPassword()) == null){
            System.out.println("Bad Login Credentials");
@@ -125,13 +134,13 @@ public class LoginController {
 
         final String jwt = jwtUtil.generateToken(userDetails);
         System.out.println("creating new jwt:" + jwt);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Access-Control-Expose-Headers", "Authorization");
+       // HttpHeaders responseHeaders = new HttpHeaders();
+        //responseHeaders.set("Access-Control-Allow-Origin", "*");
           //return ResponseEntity.ok(new AuthenticationResponse(jwt));
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         authenticationResponse.setJwt(jwt);
-        return authenticationResponse;
-        //return ResponseEntity.ok().headers(responseHeaders).body(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok().body(authenticationResponse);
+       // return ResponseEntity.ok().headers(responseHeaders).body(authenticationResponse);
     }
 
     

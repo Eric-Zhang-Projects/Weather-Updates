@@ -23,13 +23,19 @@ export class Home extends React.Component {
         if (jwt == null){
             this.props.history.push('/login');
         }
-
         console.log('passed in jwt:\n' + jwt);
 
-         axios.get('http://localhost:8080/dashboard', { headers: {'Authorization': `Bearer ${jwt}`,
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
-        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
-        'Access-Control-Allow-Headers': 'Authorization'}})
+        this.forceUpdate();
+
+         axios.get('http://localhost:8080/dashboard', 
+         { headers: 
+            {
+            'Authorization': `Bearer ${jwt}`,
+            //'Access-Control-Allow-Origin': 'http://localhost:3000',
+            'Access-Control-Request-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
+            'Access-Control-Request-Headers': 'Authorization, origin, content-type, accept'
+            }
+        })
          //`Bearer ${jwt}`
          .then( result => {
              console.log("HOME");
@@ -42,6 +48,29 @@ export class Home extends React.Component {
             alert("Valid credentials but failed to log in");
          //   this.props.history.push('/login');
         });
+
+        // fetch('http://localhost:8080/dashboard', 
+        // { 
+        //     method: "GET",
+        //     mode: "cors",
+        //     headers: {
+        //         "Authorization": `Bearer ${jwt}`,
+        //         "Content-Type": "application/json",
+        //         "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+        //         "Access-Control-Allow-Headers": "Authorization",
+        //         "Access-Control-Allow-Origin": "http://localhost:3000"
+        //     }
+        // }).then(res => {
+        //     console.log("HOME");
+        //     console.log(res.json());
+        // }).catch(err =>{
+        //     console.log(err);
+        //     alert("nooo");
+
+        // })
+        // 'Access-Control-Allow-Origin': 'http://localhost:3000',
+        // 'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
+        // 'Access-Control-Allow-Headers': 'Authorization'}}))
 
     }
 

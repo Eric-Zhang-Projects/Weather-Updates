@@ -1,6 +1,8 @@
 import React from "react";
 import loginLogo from "../../images/loginLogo.png";
 import axios from "axios";
+import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
+
 
 export class Login extends React.Component {
 
@@ -19,12 +21,23 @@ export class Login extends React.Component {
     handleSubmit = (event) =>{
         event.preventDefault();
 
+        const jwt = getJwt();
+        console.log('passed in jwt:\n' + jwt);
+        
+        const isLogged = isLoggedIn();
+        console.log("is logged in? " + isLogged);
+
         axios.post('http://localhost:8080/authenticate', {
             username: this.state.username,
             password: this.state.password
-        }).then (res => {
+        }, {headers: 
+            {
+               // 'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Request-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
+                'Access-Control-Request-Headers': 'Authorization, origin, content-type, accept'
+            }}).then (res => {
             if (res.data.jwt == null){
-                alert("Could not login for given username and password combination");
+                alert("Invalid username and password combination, please try again");
                 this.props.history.push('/login');
             }
             else{
