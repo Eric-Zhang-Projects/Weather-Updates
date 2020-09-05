@@ -6,7 +6,7 @@ import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
 
 //https://www.youtube.com/watch?v=fL8cFqhTHwA
 
-class Navbar extends React.Component {
+class NavbarLoggedIn extends React.Component {
 
     // constructor(props){
     //     super(props);
@@ -35,7 +35,7 @@ class Navbar extends React.Component {
                 <h1 className="navbar-title">Weather Updater!</h1>
                 <div className = "menu-icon"></div>
                 <ul className="nav-menu"> 
-                    { MenuItems.map((item, index)=>{
+                    { MenuItemsLoggedIn.map((item, index)=>{
                         return (
                             <li key={index}>
                                 <a className={item.cName} href={item.url}>
@@ -50,4 +50,4 @@ class Navbar extends React.Component {
     }
 }
 
-export default Navbar
+export default NavbarLoggedIn

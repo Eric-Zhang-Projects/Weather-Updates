@@ -1,6 +1,7 @@
 import React from "react";
 import loginLogo from "../../images/registerLogo.png";
 import axios from "axios";
+import Navbar from '../navbar/Navbar';
 
 export class Register extends React.Component {
 
@@ -51,6 +52,7 @@ export class Register extends React.Component {
 
     render() {
         return <div className = "base-container">
+            <Navbar />
             <div className = "content">
                 <div className = "image">
                     <img src = {loginLogo}/>

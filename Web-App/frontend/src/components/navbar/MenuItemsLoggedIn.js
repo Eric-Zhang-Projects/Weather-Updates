@@ -6,12 +6,12 @@ export const MenuItemsLoggedIn = [
     },
     {
         title: 'Account Info',
-        url: "/",
+        url: "/account",
         cName: 'nav-links'
     },
     {
         title: 'Logout',
-        url: "/",
+        url: "/logout",
         cName: 'nav-links'
     },
 ]

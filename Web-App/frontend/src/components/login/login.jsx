@@ -2,7 +2,7 @@ import React from "react";
 import loginLogo from "../../images/loginLogo.png";
 import axios from "axios";
 import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
-
+import Navbar from '../navbar/Navbar';
 
 export class Login extends React.Component {
 
@@ -30,12 +30,7 @@ export class Login extends React.Component {
         axios.post('http://localhost:8080/authenticate', {
             username: this.state.username,
             password: this.state.password
-        }, {headers: 
-            {
-               // 'Access-Control-Allow-Origin': 'http://localhost:3000',
-                'Access-Control-Request-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
-                'Access-Control-Request-Headers': 'Authorization, origin, content-type, accept'
-            }}).then (res => {
+        }, ).then (res => {
             if (res.data.jwt == null){
                 alert("Invalid username and password combination, please try again");
                 this.props.history.push('/login');
@@ -53,6 +48,7 @@ export class Login extends React.Component {
 
     render() {
         return <div className = "base-container">
+            <Navbar />
             <div className = "content">
                 <div className = "image">
                     <img src = {loginLogo}/>

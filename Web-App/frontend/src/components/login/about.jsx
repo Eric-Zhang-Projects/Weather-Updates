@@ -1,5 +1,6 @@
 import React from "react";
 import loginLogo from "../../images/loginLogo.png";
+import Navbar from "../navbar/Navbar";
 
 export class About extends React.Component {
 
@@ -8,11 +9,12 @@ export class About extends React.Component {
     }
 
     render() {
-        return <div className = "base-container" >
+        return <div>
+        
+        <div className = "base-container" >
+        <Navbar />
             To Do:
-            <p>Fix CORs header issue - Refused to set unsafe header "Access-Control-Request-Headers"</p>
             <p> Protected Routes</p>
-            <p>Change navigation bar is logged in -> can check for jwt</p>
             <p>Pages:</p>
             <ul>
                 <li>Account info</li>
@@ -21,7 +23,8 @@ export class About extends React.Component {
             </ul>
        
         </div>
-    }
+        </div>
+        }
 
 
 }

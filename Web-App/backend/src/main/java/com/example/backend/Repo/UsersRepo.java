@@ -15,7 +15,7 @@ public interface UsersRepo extends MongoRepository<UsersDocument, String>{
     //Login Query
     public UsersDocument findByUsernameAndPassword(String username, String password);
 
-    //Authentication Query
+    //Authentication Query, Account info page query
     public UsersDocument findByUsername(String username);
 
 
