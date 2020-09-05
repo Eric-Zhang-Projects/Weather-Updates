@@ -3,6 +3,10 @@ import loginLogo from "../../images/loginLogo.png";
 import axios from "axios";
 import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
 import Navbar from '../navbar/Navbar';
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
+
+
 
 export class Login extends React.Component {
 
@@ -10,13 +14,38 @@ export class Login extends React.Component {
         super(props);
         this.state = { 
             username: '',
-            password: ''
+            password: '',
+            alertVisible: false
         };
+        this.setShow = this.setShow.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.BadCredentialsAlert = this.BadCredentialsAlert.bind(this);
+    }
+
+    setShow = (bool) =>{
+        this.setState({
+            alertVisible: bool
+        });
     }
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
     }
+
+    BadCredentialsAlert = () => {
+      
+        if (this.state.alertVisible) {
+          return (
+            <Alert variant="danger" onClose={() => this.setShow(false)} dismissible>
+              <Alert.Heading>Whoops! You got an error :(</Alert.Heading>
+              <p>Invalid username and password combination, please try again</p>
+            </Alert>
+          );
+        }
+        return null;
+      }
+      
 
     handleSubmit = (event) =>{
         event.preventDefault();
@@ -32,7 +61,8 @@ export class Login extends React.Component {
             password: this.state.password
         }, ).then (res => {
             if (res.data.jwt == null){
-                alert("Invalid username and password combination, please try again");
+                this.setShow(true);
+             //   alert("Invalid username and password combination, please try again");
                 this.props.history.push('/login');
             }
             else{
@@ -40,9 +70,10 @@ export class Login extends React.Component {
             localStorage.setItem('jwt', res.data.jwt);
             this.props.history.push('/dashboard');
             }
-        }).catch(error => 
-        alert("Bad Credentials", error));
-        //this.props.history.push('/login');
+        }).catch(error => {
+        this.setShow(true);
+        this.props.history.push('/login');
+        });
 
     }
 
@@ -65,11 +96,16 @@ export class Login extends React.Component {
                 </div>
             </div>
             <div className="footer"> 
-            <button type="button" className="btn" onClick={this.handleSubmit}>
+            <div className = "button">
+            <Button type="button" className="btn" onClick={this.handleSubmit}>
                 Login!
-            </button>
+            </Button>
             </div>
-        </div>
+            <div className = "alert"><this.BadCredentialsAlert/></div>
+
+            </div>
+            </div>
+ 
     }
 
 

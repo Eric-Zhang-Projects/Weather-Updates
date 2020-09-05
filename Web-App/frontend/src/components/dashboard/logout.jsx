@@ -12,13 +12,14 @@ export class Logout extends React.Component {
         console.log("local storage with jwt:" + localStorage.getItem("jwt"));
         localStorage.clear("jwt");
         console.log("after logout local storage jwt: " + localStorage.getItem("jwt"));
-        this.props.history.push("/login");
+     //   this.props.history.push("/login");
     };
 
     render() {
 
-        return <div>{this.logout()}</div>
+        // return <div>{this.logout()}</div>
 
+        return <Redirect to ={ { pathname: 'login' }}>{this.logout()}</Redirect>
     }
 }
 //https://www.npmjs.com/package/reactjs-popup
