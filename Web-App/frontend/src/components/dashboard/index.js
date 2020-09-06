@@ -1,4 +1,4 @@
-//import "./LoginStyle.scss";
+import "./accountStyles.scss";
 
 export { Home } from "./home";
 export { Account } from "./account";

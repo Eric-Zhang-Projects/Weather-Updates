@@ -68,7 +68,7 @@ export class Login extends React.Component {
             else{
             console.log(res.data.jwt);
             localStorage.setItem('jwt', res.data.jwt);
-            this.props.history.push('/dashboard');
+            this.props.history.push('/dashboard', { from: '/login'});
             }
         }).catch(error => {
         this.setShow(true);

@@ -60,24 +60,26 @@ export class Account extends React.Component {
     render(){
         return (
         <div className = "base-container">
-            <NavbarLoggedIn/>
-            <div>
-            Username: {this.state.username}
-            </div>
-            <div>
-            Password: {this.state.password}
-            </div>
-            <div>
-            Email: {this.state.email}
-            </div>
-            <div>
-            Name:: {this.state.name}
-            </div>
-            <div>
-            City: {this.state.city}
-            </div>
-            <div>
-            Zip: {this.state.Zip}
+         <NavbarLoggedIn/>
+            <div className = "content">
+                <div>
+                Username: {this.state.username}
+                </div>
+                <div>
+                Password: {this.state.password}
+                </div>
+                <div>
+                Email: {this.state.email}
+                </div>
+                <div>
+                Name:: {this.state.name}
+                </div>
+                <div>
+                City: {this.state.city}
+                </div>
+                <div>
+                Zip: {this.state.Zip}
+                </div>
             </div>
         </div>
         )
