@@ -18,6 +18,8 @@ public interface UsersRepo extends MongoRepository<UsersDocument, String>{
     //Authentication Query, Account info page query
     public UsersDocument findByUsername(String username);
 
+    public UsersDocument findByEmail(String email);
+
 
     
 }

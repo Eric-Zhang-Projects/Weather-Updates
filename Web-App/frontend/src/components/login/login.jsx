@@ -1,6 +1,7 @@
 import React from "react";
 import loginLogo from "../../images/loginLogo.png";
 import axios from "axios";
+import { BASE_URL } from "../../constants.json";
 import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
 import Navbar from '../navbar/Navbar';
 import Alert from 'react-bootstrap/Alert';
@@ -56,7 +57,7 @@ export class Login extends React.Component {
         const isLogged = isLoggedIn();
         console.log("is logged in? " + isLogged);
 
-        axios.post('http://localhost:8080/authenticate', {
+        axios.post(`${BASE_URL}/authenticate`, {
             username: this.state.username,
             password: this.state.password
         }, ).then (res => {

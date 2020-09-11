@@ -10,6 +10,7 @@ import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.LoginUser;
 import com.example.backend.Responses.User;
+import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
@@ -58,6 +59,9 @@ public class LoginController {
     @Autowired
     private UsersRepo usersRepo;
 
+    @Autowired
+    private ExistingUserCheck existingUserCheck;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity <?> Register(@RequestBody User user) {
         UsersDocument usersDocument = new UsersDocument();
@@ -67,24 +71,29 @@ public class LoginController {
         usersDocument.setPassword(user.getPassword());
         usersDocument.setCity("");
         usersDocument.setZip("");
-        DuplicateUserError duplicateUserError = new DuplicateUserError();
-        List<UsersDocument> listofExistingUsers = usersRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-         if (listofExistingUsers.isEmpty()){
-             System.out.println("Unique user registration");
-             usersRepo.save(usersDocument);
-         }
-         else{
-            listofExistingUsers.forEach((existingUser) ->{
-                if (existingUser.getUsername().equals(user.getUsername())){
-                    duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
-                }
-                if (existingUser.getEmail().equals(user.getEmail())){
-                    duplicateUserError.setDuplicateEmail("Current Email is already in use");
-                }
-            }); 
-            return ResponseEntity.ok(duplicateUserError); 
-         }
-         return ResponseEntity.ok(duplicateUserError);
+        DuplicateUserError duplicateUserError = existingUserCheck.findDuplicateUsers(usersDocument.getUsername(), usersDocument.getEmail());
+        if (duplicateUserError.getDuplicateEmail()==null && duplicateUserError.getDuplicateUsername()==null){
+            usersRepo.save(usersDocument);
+        }
+        return ResponseEntity.ok(duplicateUserError);
+        // DuplicateUserError duplicateUserError = new DuplicateUserError();
+        // List<UsersDocument> listofExistingUsers = usersRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+        //  if (listofExistingUsers.isEmpty()){
+        //      System.out.println("Unique user registration");
+        //      usersRepo.save(usersDocument);
+        //  }
+        //  else{
+        //     listofExistingUsers.forEach((existingUser) ->{
+        //         if (existingUser.getUsername().equals(user.getUsername())){
+        //             duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
+        //         }
+        //         if (existingUser.getEmail().equals(user.getEmail())){
+        //             duplicateUserError.setDuplicateEmail("Current Email is already in use");
+        //         }
+        //     }); 
+        //     return ResponseEntity.ok(duplicateUserError); 
+        //  }
+        //  return ResponseEntity.ok(duplicateUserError);
 
     }
 

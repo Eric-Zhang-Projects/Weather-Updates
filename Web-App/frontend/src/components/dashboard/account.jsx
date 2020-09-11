@@ -2,13 +2,14 @@ import React from "react";
 import Axios from "axios";
 import { BASE_URL } from "../../constants.json";
 import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
-import Navbar from "../navbar/Navbar";
+import Button from 'react-bootstrap/Button';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 
 export class Account extends React.Component {
 
     constructor(props){
         super(props);
+        console.log("props: " + this.props);
         this.state= {
             username: '',
             password: '',
@@ -50,18 +51,27 @@ export class Account extends React.Component {
 
     }
 
-
-    handleSubmit = (event) =>{
+    handleUpdateInfo = (event) =>{
         event.preventDefault();
 
-    }
+        console.log("state!" + this.state.username);
+        this.props.history.push('/updateInfo', { state: {
+            username: this.state.username,
+            password: this.state.password,
+            email: this.state.email,
+            name: this.state.name
+        } });
 
+    }
 
     render(){
         return (
         <div className = "base-container">
          <NavbarLoggedIn/>
             <div className = "content">
+                <div>
+                Name: {this.state.name}
+                </div>
                 <div>
                 Username: {this.state.username}
                 </div>
@@ -71,16 +81,19 @@ export class Account extends React.Component {
                 <div>
                 Email: {this.state.email}
                 </div>
-                <div>
-                Name:: {this.state.name}
-                </div>
+                <hr/>
                 <div>
                 City: {this.state.city}
                 </div>
                 <div>
                 Zip: {this.state.Zip}
                 </div>
-            </div>
+
+                <hr/>
+                <Button type="button" className="btn" onClick={this.handleUpdateInfo.bind(this)}>Update Account Info</Button>  
+                <hr/>     
+                <Button type="button" className="btn" onClick={this.handleDeleteAccount}>Delete Account</Button>                 
+                </div>
         </div>
         )
     }

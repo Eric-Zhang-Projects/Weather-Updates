@@ -1,5 +1,6 @@
 import React from "react";
 import axios from 'axios';
+import { BASE_URL } from "../../constants.json";
 import { getJwt } from '../helpers/jwtHelper';
 import NavbarLoggedIn from '../navbar/NavbarLoggedIn';
 import Alert from 'react-bootstrap/Alert';
@@ -33,8 +34,8 @@ export class Home extends React.Component {
         if (this.state.alertVisible) {
           return (
             <Alert variant="success" onClose={() => this.setShow(false)} dismissible>
-              {/* <Alert.Heading>Logged in!</Alert.Heading> */}
-              <p>Logged In!</p>
+              <Alert.Heading>Welcome back!</Alert.Heading>
+              <p>Logged In</p>
             </Alert>
           );
         }
@@ -43,13 +44,15 @@ export class Home extends React.Component {
 
     componentDidMount() {
 
+        console.log(this.props.history);
+
         const jwt = getJwt();
         if (jwt == null){
             this.props.history.push('/login');
         }
         console.log('passed in jwt:\n' + jwt);
 
-         axios.get('http://localhost:8080/dashboard', 
+         axios.get(`${BASE_URL}/dashboard`, 
          { headers: {'Authorization': `Bearer ${jwt}`}})
          .then( result => {
              console.log("hit dashboard");

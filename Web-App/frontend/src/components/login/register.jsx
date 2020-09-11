@@ -1,6 +1,7 @@
 import React from "react";
 import loginLogo from "../../images/registerLogo.png";
 import axios from "axios";
+import { BASE_URL } from "../../constants.json";
 import Navbar from '../navbar/Navbar';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -130,7 +131,7 @@ export class Register extends React.Component {
             return null;
         }
 
-        axios.post('http://localhost:8080/register', {
+        axios.post(`${BASE_URL}/register`, {
             name: this.state.name,
             email: this.state.email,
             username: this.state.username,

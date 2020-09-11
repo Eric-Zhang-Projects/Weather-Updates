@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
 import { isLoggedIn } from './components/helpers/jwtHelper';
 
 export default class ProtectedRoute extends React.Component {
@@ -16,9 +16,9 @@ export default class ProtectedRoute extends React.Component {
         const isAuthenticated = isLoggedIn();
 
         return isAuthenticated ? (
-            <Component/>
+        <Route render={(props) => <Component {...props} />}/>
         ) : (
-            <Redirect to ={ { pathname: 'login' }}>{this.alerting()}</Redirect>
+            <Redirect to ={ { pathname: 'unauthorized' }}>{this.alerting()}</Redirect>
             );
         
     }
