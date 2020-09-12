@@ -17,8 +17,8 @@ export class About extends React.Component {
             <p> Protected Routes(done)</p>
             <p>Pages:</p>
             <ul>
-                <li> make current navbar link underlined</li>
-                <li>Account info + updating and deleting</li>
+                <li> make current navbar link underlined </li>
+                <li>Account info + updating and deleting (done)</li>
                 {/* for updating -> need to make sure duplicate user checking works for updating -> also need to include alerts on success and failure and figure out rerouting issue */}
                 <li>Dashboard page with current weather info + search bar option + weather functionality</li>
                 <li>[x] mini alert for login successes</li>

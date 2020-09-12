@@ -51,6 +51,7 @@ export class Account extends React.Component {
 
     }
 
+
     handleUpdateInfo = (event) =>{
         event.preventDefault();
 
@@ -61,6 +62,14 @@ export class Account extends React.Component {
             email: this.state.email,
             name: this.state.name
         } });
+
+    }
+
+    handleDeleteAccount = (event) =>{
+        event.preventDefault();
+
+        this.props.history.push('/deleteAccount');
+        //show pop up alert and give user yes or no option then axios away
 
     }
 
@@ -90,7 +99,7 @@ export class Account extends React.Component {
                 </div>
 
                 <hr/>
-                <Button type="button" className="btn" onClick={this.handleUpdateInfo.bind(this)}>Update Account Info</Button>  
+                <Button type="button" className="btn" onClick={this.handleUpdateInfo}>Update Account Info</Button>  
                 <hr/>     
                 <Button type="button" className="btn" onClick={this.handleDeleteAccount}>Delete Account</Button>                 
                 </div>

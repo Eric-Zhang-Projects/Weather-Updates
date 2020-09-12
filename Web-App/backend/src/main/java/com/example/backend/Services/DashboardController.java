@@ -80,7 +80,7 @@ public class DashboardController {
 
         */
         DuplicateUserError duplicateUserError = new DuplicateUserError();
-        if (!currentInfo.getUsername().equals(user.getNewUsername()) || !currentInfo.getEmail().equals(user.getNewEmail())){
+        if (currentInfo.getUsername().equals(user.getNewUsername()) || currentInfo.getEmail().equals(user.getNewEmail())){
             duplicateUserError = existingUserCheck.findDuplicateUsers(user.getNewUsername(), user.getNewEmail());
             System.out.println("updating error: " + duplicateUserError.getDuplicateEmail() + " " + duplicateUserError.getDuplicateUsername());
             if (duplicateUserError.getDuplicateEmail()==null && duplicateUserError.getDuplicateUsername()==null){
@@ -92,5 +92,11 @@ public class DashboardController {
             usersRepo.save(currentInfo);
         }
         return ResponseEntity.ok(duplicateUserError);
+    }
+
+    @RequestMapping(value = "/deleteAccount", method = RequestMethod.POST)
+    public ResponseEntity<?> DeleteUser(@RequestHeader("Authorization") String jwt){
+        System.out.println("hit delete user");
+        return ResponseEntity.ok(usersRepo.deleteByUsername(jwtUtil.extractUsername(jwt.substring(7))));
     }
 }

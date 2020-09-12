@@ -20,6 +20,6 @@ public interface UsersRepo extends MongoRepository<UsersDocument, String>{
 
     public UsersDocument findByEmail(String email);
 
-
+    public UsersDocument deleteByUsername(String username);
     
 }
