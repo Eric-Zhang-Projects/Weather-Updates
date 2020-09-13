@@ -19,9 +19,12 @@ export class About extends React.Component {
             <ul>
                 <li> make current navbar link underlined </li>
                 <li>Account info + updating and deleting (done)</li>
+                <li>alerts/popups for updating account</li>
+                </ul>
+                <ul>
                 {/* for updating -> need to make sure duplicate user checking works for updating -> also need to include alerts on success and failure and figure out rerouting issue */}
+                <hr/><br/>
                 <li>Dashboard page with current weather info + search bar option + weather functionality</li>
-                <li>[x] mini alert for login successes</li>
                 <li> forgot password</li>
                 <li> password encryption</li>
                 <li> sending emails with weather info</li>

@@ -3,8 +3,9 @@ import loginLogo from "../../images/registerLogo.png";
 import axios from "axios";
 import { BASE_URL } from "../../constants.json";
 import Navbar from '../navbar/Navbar';
-import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 export class Register extends React.Component {
 
@@ -15,31 +16,16 @@ export class Register extends React.Component {
             email: '',
             username: '',
             password: '',
-            alertVisibleError: false,
-            alertVisibleSuccess: false,
-            errorMessage: [],
-            variant: 'danger',
-            title: 'Whoops! You got an error :('
+            usernameError: 'Username',
+            emailError: 'Email',
+            nameError:'Name',
+            passwordError:'Password',
+            successAlert: null
         };
-        this.setShowError = this.setShowError.bind(this);
-        this.setShowSuccess = this.setShowSuccess.bind(this);
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleValidation = this.handleValidation.bind(this);
-        this.BadRegisterAlert = this.BadRegisterAlert.bind(this);
-        this.SuccessfulRegisterAlert = this.SuccessfulRegisterAlert.bind(this);
-    }
-
-    setShowError = (bool) =>{
-        this.setState({
-            alertVisibleError: bool
-        });
-    }
-
-    setShowSuccess = (bool) =>{
-        this.setState({
-            alertVisibleSuccess: bool
-        });
     }
 
     handleChange = (event) => {
@@ -48,85 +34,59 @@ export class Register extends React.Component {
 
     handleValidation = () =>{
         console.log("entering validation");
-        var err = [];
+        var passed = true;
         if (this.state.name == ""){
-            err.push("Name field cannot be empty");
+            passed = false;
+            this.setState({
+                nameError: "Name field cannot be empty"
+            })
         }
         if (this.state.email == ""){
-            err.push("Email field cannot be empty");
+            passed = false;
+            this.setState({
+                emailError: "Email field cannot be empty"
+            })
         }
         if (this.state.username == ""){
-            err.push("Username field cannot be empty");
+            passed = false;
+            this.setState({
+                usernameError: "Username field cannot be empty"
+            })
         }
         if (this.state.password ==""){
-            err.push("Password field cannot be empty");
+            passed = false;
+            this.setState({
+                passwordError: "Password field cannot be empty"
+            })
         }
-        return err;        
+        return passed;
+
     }
 
-    BadRegisterAlert = () => {
-      
-        if (this.state.alertVisibleError) {
-          return (
-            <Alert variant={this.state.variant} onClose={() => this.setShowError(false)} dismissible>
-              <Alert.Heading>{this.state.title}</Alert.Heading>
-              <hr />
-                { this.state.errorMessage.map((item, index)=>{
-                        return (
-                            <div>
-                            <p key={index}>{item}</p>
-                            </div>
-                        )
-                })
-                }
-                  
-            </Alert>
-          );
-        }
-        return null;
-      }
-
-      SuccessfulRegisterAlert = () => {   
-          if (this.state.alertVisibleSuccess){   
-        return (
-            <Alert variant= {this.state.variant}>
-              <Alert.Heading>{this.state.title}</Alert.Heading>
-              <hr />
-                { this.state.errorMessage.map((item, index)=>{
-                        return (
-                            <div>
-                            <p key={index}>{item}</p>
-                            </div>
-                        )
-                })
-                }
-              <hr />
-              <div className="d-flex justify-content-end">
-                <Button onClick={() => this.props.history.push('/login')} variant="outline-success">
-                  Take me to login!
-                </Button>
-              </div>
-            </Alert>
-        );
-      }
-        return null;
-      }
+    showSuccessAlert = () =>{
+        return <SweetAlert 
+            success
+            title="Woot!"
+            onConfirm={() => {this.props.history.push('/login')}}
+            >
+            Account Registered!
+            </SweetAlert>   
+    }
 
     handleSubmit = (event) =>{
         event.preventDefault();
 
         this.setState({
-            alertVisibleError: false,
-            alertVisibleSuccess: false
+            usernameError: 'Username',
+            emailError: 'Email',
+            nameError:'Name',
+            passwordError:'Password'
         })
 
-        var vErrs = this.handleValidation();
-        if (vErrs.length >0){
+        var validationErrors = this.handleValidation();
+        //validationErrors true is passed, false if violation
+        if (!validationErrors){
             console.log("failed validation");
-            this.setState({
-                errorMessage: vErrs
-            }) 
-            this.setShowError(true);
             this.props.history.push('/register');
             return null;
         }
@@ -139,30 +99,21 @@ export class Register extends React.Component {
         }).then (res => {
             console.log(res.data.duplicateEmail + " " + res.data.duplicateUsername);
             if(!res.data.duplicateUsername && !res.data.duplicateEmail){
-                //alert("New User successfully created! Please login");
-                var successful = ["Your new account has been created. Please login with your credentials!"];
                 this.setState({
-                    errorMessage: successful,
-                    title: "Hello " + this.state.name + ", welcome!",
-                    variant: "success"
-                })
-                this.setShowSuccess(true);
-                //this.props.history.push('/register');
+                    successAlert: this.showSuccessAlert()
+            });
             }
             else{
-                var err = [];
                 if (res.data.duplicateUsername){
-                   err.push(res.data.duplicateUsername);
+                   this.setState({
+                       usernameError: res.data.duplicateUsername
+                   })
                 }
                 if (res.data.duplicateEmail){
-                    err.push(res.data.duplicateEmail)
+                    this.setState({
+                        emailError: res.data.duplicateEmail
+                    })
                 }
-                console.log(err.length);
-                this.setState({
-                    errorMessage: err
-                }) 
-                this.setShowError(true);
-                //this.props.history.push('/register');
             }
         }).catch(error =>{
             this.setState({
@@ -174,6 +125,38 @@ export class Register extends React.Component {
     
     }
 
+    nameField = () =>{
+        var textColor = 'black';
+        if (this.state.nameError != 'Name'){
+            textColor = 'red';
+        }
+            return <label htmlFor="name" style={{ color: textColor }}>{this.state.nameError}</label>
+    }
+
+    emailField = () =>{
+        var textColor = 'black';
+        if (this.state.emailError != 'Email'){
+            textColor = 'red';
+        }
+            return <label htmlFor="email" style={{ color: textColor }}>{this.state.emailError}</label>
+    }
+
+    usernameField = () =>{
+        var textColor = 'black';
+        if (this.state.usernameError != 'Username'){
+            textColor = 'red';
+        }
+            return <label htmlFor="username" style={{ color: textColor }}>{this.state.usernameError}</label>
+    }
+
+    passwordField = () =>{
+        var textColor = 'black';
+        if (this.state.passwordError != 'Password'){
+            textColor = 'red';
+        }
+            return <label htmlFor="password" style={{ color: textColor }}>{this.state.passwordError}</label>
+    }
+
     render() {
         return <div className = "base-container">
             <Navbar />
@@ -181,21 +164,21 @@ export class Register extends React.Component {
                 <div className = "image">
                     <img src = {loginLogo}/>
                 </div>
-                <div className = "form">
+                <div className = "form"> Please fill in the following information: <hr/>
                     <div className = "form-group">
-                            <label htmlFor="password">Name</label>
+                            {this.nameField()}
                             <input type="text" name="name" placeholder="Name" value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
-                            <label htmlFor="password">Email</label>
+                        {this.emailField()}
                             <input type="text" name="email" placeholder="Email" value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
-                            <label htmlFor="username">Username</label>
+                        {this.usernameField()}
                             <input type="text" name="username" placeholder="Username" value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
-                            <label htmlFor="password">Password</label>
+                        {this.passwordField()}
                             <input type="text" name="password" placeholder="Password" value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                 </div>
@@ -205,9 +188,7 @@ export class Register extends React.Component {
                 Register!
             </Button>
             </div>
-            <div className = "alert"><this.BadRegisterAlert/></div>
-            <div className = "alert"><this.SuccessfulRegisterAlert/></div>
-
+            {this.state.successAlert}
 
         </div>
     }

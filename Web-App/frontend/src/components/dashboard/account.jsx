@@ -9,14 +9,13 @@ export class Account extends React.Component {
 
     constructor(props){
         super(props);
-        console.log("props: " + this.props);
         this.state= {
             username: '',
             password: '',
             email: '',
             name: '',
             city: 'N/A',
-            zip: 'N/A'
+            zip: 'N/A',
         }
     }
 
@@ -44,6 +43,12 @@ export class Account extends React.Component {
                 city: result.data.city,
                 zip: result.data.zip
             });
+            if (result.data.city == "" || result.data.zip ==""){
+                this.setState({
+                    city: 'N/A',
+                    zip: 'N/A'
+                })
+            }
         }).catch(err =>{
             console.log(err);
             alert("failed account!");
@@ -95,13 +100,13 @@ export class Account extends React.Component {
                 City: {this.state.city}
                 </div>
                 <div>
-                Zip: {this.state.Zip}
+                Zip: {this.state.zip}
                 </div>
 
                 <hr/>
                 <Button type="button" className="btn" onClick={this.handleUpdateInfo}>Update Account Info</Button>  
                 <hr/>     
-                <Button type="button" className="btn" onClick={this.handleDeleteAccount}>Delete Account</Button>                 
+                <Button type="button" className="btn" onClick={this.handleDeleteAccount} variant="outline-danger">Delete Account</Button>                 
                 </div>
         </div>
         )

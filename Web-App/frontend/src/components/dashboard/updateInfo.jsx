@@ -214,9 +214,19 @@ export class UpdateInfo extends React.Component {
                             <label htmlFor="password">Password</label>
                             <input type="text" name="newPassword" placeholder={"Current: " + this.state.oldPassword} value={this.state.value} onChange={this.handleChange} required/>
                         </div>
+                        {/* <div className = "form-group">
+                        <div class="d-flex justify-content-between" >
+              <Button onClick={() => this.props.history.push('/account')} variant="outline-danger">Cancel</Button>
+              <Button type="button" className="btn" onClick={this.handleSubmitChanges} variant="outline-success">Submit Changes</Button>  
+            </div> */}
+            {/* </div> */}
                 </div>
 
-                    <Button type="button" className="btn" onClick={this.handleSubmitChanges}>Submit Changes</Button>  
+                <div class="d-flex justify-content-around" style={{width: "100%"}}>
+              <Button onClick={() => this.props.history.push('/account')} variant="outline-danger">Cancel</Button>
+              <Button type="button" className="btn" onClick={this.handleSubmitChanges} variant="outline-success">Submit Changes</Button>  
+            </div>
+
                     <div className = "alert"><this.BadUpdateAlert/></div>
                     <div className = "alert"><this.SuccessfulUpdateAlert/></div>
                     </div>

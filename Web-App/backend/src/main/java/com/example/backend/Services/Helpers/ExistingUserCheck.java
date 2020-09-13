@@ -34,11 +34,11 @@ public class ExistingUserCheck {
 
         if (usersRepo.findByUsername(username) != null){
             System.out.println("duplicate username");
-            duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
+            duplicateUserError.setDuplicateUsername("Userame is unavailable");
         }
         if (usersRepo.findByEmail(email) != null){
             System.out.println("duplicate username");
-            duplicateUserError.setDuplicateEmail("Current Email is already in use");
+            duplicateUserError.setDuplicateEmail("Email is already in use");
         }
 
         return duplicateUserError;

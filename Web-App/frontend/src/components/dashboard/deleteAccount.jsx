@@ -5,45 +5,46 @@ import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 export class DeleteAccount extends React.Component {
 
-DeleteConfirmation = () => {    
-  return (
-      <Alert variant= "danger">
-        <Alert.Heading>Are you sure you want to delete your account?</Alert.Heading>
-        <hr />
-        <div className="d-flex justify-content-around">
-        <Button onClick={() => this.props.history.push('/account')} variant="outline-success">
-            No, take me back to my account page
-          </Button>
-          <Button onClick={() => this.handleDelete()} variant="outline-danger">
-            Yes, delete my account
-          </Button>
-        </div>
-      </Alert>
-  );
+confirmDelete = () =>{
+  console.log("confirmed deletion");
+  const jwt = getJwt();
+  Axios.post(`${BASE_URL}/deleteAccount`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
+  .then(res => {
+      console.log(res.data);
+      this.props.history.push('/logout');
+
+  }).catch( err => {
+      console.log(err);
+  });
 }
 
-handleDelete = () => {
-
-    const jwt = getJwt();
-    Axios.post(`${BASE_URL}/deleteAccount`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
-    .then(res => {
-        console.log(res.data);
-        this.props.history.push('/logout');
-    }).catch( err => {
-        console.log(err);
-    });
+showFinalPopup = () => {
+  console.log("showing popup");
+  //console.log(this.state.finalAlert);
+  return <SweetAlert
+  warning
+  showCancel
+  confirmBtnText="Yes, delete my account"
+  confirmBtnBsStyle="danger"
+  title="Are you sure?"
+  onConfirm={() => this.confirmDelete()}
+  onCancel={() => this.props.history.push('/account')}
+  focusCancelBtn
+>
+  This will permanently delete your account and information from this application
+</SweetAlert>
 }
-
-
 
 render(){
     return (
     <div className = "base-container">
      <NavbarLoggedIn/>
-     <div className = "alert"><this.DeleteConfirmation/></div>
+     <div>{this.showFinalPopup()}</div>
      </div>
     )
 }
