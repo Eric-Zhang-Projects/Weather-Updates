@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/Button';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import { createBrowserHistory } from 'history';
 import Alert from 'react-bootstrap/Alert';
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 export class UpdateInfo extends React.Component {
 
@@ -20,86 +22,54 @@ export class UpdateInfo extends React.Component {
             newPassword: '',
             newEmail: '',
             newName: '',
-            alertVisibleSuccess: false,
-            alertVisibleError: false,
-            errorMessage: [],
-            title: '',
-            variant: '',
-            action: '',
-            buttonTitle: ''
+            enterAllFields: 'Please only input the information you would like to change, leaving the other fields empty',
+            allFieldsTextColor: 'black',
+            successAlert: null,
+            successMessage: '',
+            redirectTo: '',
+            usernameError: 'Username',
+            emailError: 'Email',
+            title: ''
+        
 
         }
 
         this.handleSubmitChanges = this.handleSubmitChanges.bind(this);
-        this.setShowError = this.setShowError.bind(this);
-        this.setShowSuccess = this.setShowSuccess.bind(this);
-        this.BadUpdateAlert = this.BadUpdateAlert.bind(this);
-        this.SuccessfulUpdateAlert = this.SuccessfulUpdateAlert.bind(this);
-
+    
     }
 
-    setShowError = (bool) =>{
-        this.setState({
-            alertVisibleError: bool
-        });
+    showSuccessAlert = () =>{
+        return <SweetAlert 
+            success
+            title="Woot!"
+            onConfirm={() => {this.props.history.push(this.state.redirectTo)}}
+            >
+            {this.state.successMessage}
+            </SweetAlert>   
     }
 
-    setShowSuccess = (bool) =>{
-        this.setState({
-            alertVisibleSuccess: bool
-        });
+    confirmAlert = () =>{
+        return <SweetAlert
+        warning
+        showCancel
+        confirmBtnText="Confirm Changes"
+        confirmBtnBsStyle="danger"
+        title={this.state.title}
+        onConfirm={() => this.handleSubmitChanges()}
+        onCancel={() => this.props.history.push('/account')}
+        focusCancelBtn 
+          //  success
+          //  title="A!"
+            >
+            {this.state.successMessage}
+            </SweetAlert>   
     }
 
-    BadUpdateAlert = () => {
-      
-        if (this.state.alertVisibleError) {
-          return (
-            <Alert variant={this.state.variant} onClose={() => this.setShowError(false)} dismissible>
-              <Alert.Heading>{this.state.title}</Alert.Heading>
-              <hr />
-                { this.state.errorMessage.map((item, index)=>{
-                        return (
-                            <div>
-                            <p key={index}>{item}</p>
-                            </div>
-                        )
-                })
-                }
-                  
-            </Alert>
-          );
-        }
-        return null;
-      }
+    // helper = () => {
+    //     this.setState({successAlert: null})
+    //     ; 
+    // }
 
-    SuccessfulUpdateAlert = () => {   
-        if (this.state.alertVisibleSuccess){   
-      return (
-          <Alert variant= {this.state.variant}>
-            <Alert.Heading>{this.state.title}</Alert.Heading>
-            <hr />
-              {/* { this.state.errorMessage.map((item, index)=>{
-                      return (
-                          <div>
-                          <p key={index}>{item}</p>
-                          </div>
-                      )
-              })
-              } */}
-            {/* <hr /> */}
-            <div className="d-flex justify-content-around">
-              <Button onClick={() => this.props.history.push(this.state.action)} variant="outline-success">
-                {this.state.buttonTitle}
-              </Button>
-              {/* <Button onClick={() => this.props.history.push(this.state.action)} variant="outline-success">
-                Take me to login!
-              </Button> */}
-            </div>
-          </Alert>
-      );
-    }
-      return null;
-    }
 
     handleChange = (event) => {
         this.setState({[event.target.name]: event.target.value});
@@ -125,8 +95,58 @@ export class UpdateInfo extends React.Component {
         
     }
 
-    handleSubmitChanges = (event) => {
+    handleConfirmChanges = (event) => {
         event.preventDefault();
+
+
+        console.log("change? " + (this.state.newName == '' && this.state.newUsername == '' && this.state.newEmail == '' && this.state.newPassword == ''));
+        if (this.state.newName == '' && this.state.newUsername == '' && this.state.newEmail == '' && this.state.newPassword == ''){
+            this.setState({enterAllFields: "Please enter at least one field to update, or cancel",
+            allFieldsTextColor: 'red',
+            emailError: 'Email',
+            usernameErro: 'Username'
+        })
+        }
+        else{
+            console.log("passed");
+            if (this.state.newUsername!= ''){
+                console.log("changed username");
+                this.setState({
+                    title: "This action will require you to re-log in",
+            }, () =>{
+                console.log(this.state.title);
+            })
+            }
+            else{
+                console.log("didnt change username");
+                this.setState({
+                    title: "Are you sure you want to update this information?",
+            }, () =>{
+                console.log(this.state.title);
+            })
+            }
+        }
+
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.title!==this.state.title && this.state.title!='-1'){
+            console.log("state change");
+            this.setState({successAlert: this.confirmAlert()}, () =>{
+                console.log(this.state.title);
+            });
+        }
+    }
+
+    handleSubmitChanges = () => {
+
+        this.setState({
+            usernameError: 'Username',
+            emailError: 'Email',
+            successAlert: null,
+            enterAllFields: 'Please only input the information you would like to change, leaving the other fields empty',
+            allFieldsTextColor: 'black'
+        })
 
         const jwt = getJwt();
 
@@ -148,48 +168,56 @@ export class UpdateInfo extends React.Component {
                 //alert("New User successfully created! Please login");
                 if (this.state.newUsername != ""){
                 this.setState({
-                    title: "Your credentials have been updated. Please login again with your new credentials!",
-                    variant: "success",
-                    action: '/logout',
-                    buttonTitle: 'Back to login'
-                })
+                    successMessage: "Your credentials have been updated. Please login again with your new credentials!",
+                    redirectTo: '/logout'
+                });
+                this.setState({successAlert: this.showSuccessAlert()});
                 }
                 else{
                     this.setState({
-                        title: "Your credentials have been updated!",
-                        variant: "success",
-                        action: '/dashboard',
-                        buttonTitle: 'Back to dashboard'
-                    })
+                        successMessage: "Your credentials have been updated!",
+                        redirectTo: '/dashboard',
+                    });
+                    this.setState({successAlert: this.showSuccessAlert()});
                 }
-                this.setShowSuccess(true);
-                //this.props.history.push('/register');
             }
             else{
-                var err = [];
                 if (res.data.duplicateUsername){
-                   err.push(res.data.duplicateUsername);
-                }
-                if (res.data.duplicateEmail){
-                    err.push(res.data.duplicateEmail)
-                }
-                console.log(err.length);
-                this.setState({
-                    title: "Error!",
-                    variant: "danger",
-                    errorMessage: err
-                }) 
-                this.setShowError(true);
-                //this.props.history.push('/register');
+                    this.setState({
+                        usernameError: res.data.duplicateUsername
+                    })
+                 }
+                 if (res.data.duplicateEmail){
+                     this.setState({
+                         emailError: res.data.duplicateEmail
+                     })
+                 }
+                 this.setState({title: '-1'});
             }
-            // if (result.data.duplicateUsername)
-            // if (this.state.newUsername != ""){
-            //     this.props.history.push("/logout");
-            // }
-            // this.props.history.push("/dashboard");
         }).catch (error => {
             console.log(error);
         });
+    }
+
+
+    emailField = () =>{
+        var textColor = 'black';
+        if (this.state.emailError != 'Email'){
+            textColor = 'red';
+        }
+            return <label htmlFor="email" style={{ color: textColor }}>{this.state.emailError}</label>
+    }
+
+    usernameField = () =>{
+        var textColor = 'black';
+        if (this.state.usernameError != 'Username'){
+            textColor = 'red';
+        }
+            return <label htmlFor="username" style={{ color: textColor }}>{this.state.usernameError}</label>
+    }
+
+    allFields = () => {
+        return <label htmlFor="allFields" style={{ color: this.state.allFieldsTextColor }}>{this.state.enterAllFields}</label>
     }
         
         render(){
@@ -197,17 +225,17 @@ export class UpdateInfo extends React.Component {
             <div className = "base-container">
              <NavbarLoggedIn/>
              <div className = "form">
-                 <div>Please only input the information you would like to change, leaving the other fields empty</div>
+                 <div>{this.allFields()}</div>
                     <div className = "form-group">
-                            <label htmlFor="password">Name</label>
+                            <label htmlFor="name">Name</label>
                             <input type="text" name="newName" placeholder={"Current: " + this.state.oldName} value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
-                            <label htmlFor="password">Email</label>
+                        {this.emailField()}
                             <input type="text" name="newEmail" placeholder= {"Current: " + this.state.oldEmail}  value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
-                            <label htmlFor="username">Username</label>
+                        {this.usernameField()}
                             <input type="text" name="newUsername" placeholder={"Current: " + this.state.oldUsername} value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         <div className = "form-group">
@@ -224,11 +252,9 @@ export class UpdateInfo extends React.Component {
 
                 <div class="d-flex justify-content-around" style={{width: "100%"}}>
               <Button onClick={() => this.props.history.push('/account')} variant="outline-danger">Cancel</Button>
-              <Button type="button" className="btn" onClick={this.handleSubmitChanges} variant="outline-success">Submit Changes</Button>  
+              <Button type="button" className="btn" onClick={this.handleConfirmChanges} variant="outline-success">Submit Changes</Button>  
             </div>
-
-                    <div className = "alert"><this.BadUpdateAlert/></div>
-                    <div className = "alert"><this.SuccessfulUpdateAlert/></div>
+                    {this.state.successAlert}
                     </div>
 
             

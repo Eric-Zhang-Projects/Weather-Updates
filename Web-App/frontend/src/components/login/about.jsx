@@ -19,7 +19,7 @@ export class About extends React.Component {
             <ul>
                 <li> make current navbar link underlined </li>
                 <li>Account info + updating and deleting (done)</li>
-                <li>alerts/popups for updating account</li>
+                <li>alerts/popups for updating account (done)</li>
                 </ul>
                 <ul>
                 {/* for updating -> need to make sure duplicate user checking works for updating -> also need to include alerts on success and failure and figure out rerouting issue */}
@@ -30,6 +30,7 @@ export class About extends React.Component {
                 <li> sending emails with weather info</li>
                 <li> create lambda with cron job</li>
                 <li> styling smh</li>
+                <li> clean up code and imports</li>
 
 
 
