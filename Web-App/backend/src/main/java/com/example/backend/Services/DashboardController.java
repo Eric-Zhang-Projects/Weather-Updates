@@ -1,15 +1,22 @@
 package com.example.backend.Services;
 
+import java.util.List;
+
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
 import com.example.backend.Responses.User;
+import com.example.backend.Responses.WeatherSearch;
+import com.example.backend.Responses.WeatherResponses.ForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
@@ -36,13 +44,42 @@ public class DashboardController {
     @Autowired
     private ExistingUserCheck existingUserCheck;
 
+    @Value("${OPEN_WEATHER_API_KEY}")
+    private String apiKey;
+
     @RequestMapping("/dashboard")
     public ResponseEntity<?> Dashboard(){
         System.out.println("hit dashboard");
+        WeatherSearch weatherSearch = new WeatherSearch();
+        weatherSearch.setZip("08550");
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://api.openweathermap.org/data/2.5/forecast?";
+        if (weatherSearch.getCityName() != null){
+            uri += "q=" + weatherSearch.getCityName() + "&units=imperial&appid=" + apiKey;
+        }
+        else if (weatherSearch.getZip() != null){
+            uri += "zip=" + weatherSearch.getZip() + "&units=imperial&appid=" + apiKey;
+        }
+        else if (weatherSearch.getGeoCoordinates() !=null ){
+            uri += weatherSearch.getGeoCoordinates() + "&units=imperial&appid=" + apiKey;
+        }
+        System.out.println("uri at: " + uri);
+        ResponseEntity<ForecastResponse> forecastResponse = restTemplate.exchange(
+            uri, HttpMethod.GET, null,
+            new ParameterizedTypeReference<ForecastResponse>(){});
+
+        ForecastResponse result = forecastResponse.getBody();
+        System.out.println("feels like" + result.getList().get(0).getMain().getFeels_like());
+        System.out.println("des " + result.getList().get(0).getWeather().get(0).getDescription());
+        System.out.println("? " + result.getCity().getId() + " at" +  result.getCity().getName());
+        System.out.println("dt " + result.getList().get(0).getDt_txt());
         DashboardResponse dashboardResponse = new DashboardResponse();
         dashboardResponse.setGreeting("hey bro whats good");
-        return ResponseEntity.ok(dashboardResponse);
+
+        return ResponseEntity.ok(result);
     }
+
+    // @RequestMapping("/")
 
 
     @RequestMapping("/account")

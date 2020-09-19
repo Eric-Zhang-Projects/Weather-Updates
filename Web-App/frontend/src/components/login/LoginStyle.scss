@@ -41,6 +41,7 @@
             font-size: 20px;
         }
         font-family: "Open Sans", sans-serif;
+        margin-bottom: 31px
 
     }
 
@@ -54,7 +55,12 @@
         background-color: #F3F3F3;
         border: 0;
         border-radius: 4px;
-        margin-bottom: 31px;
+        margin-bottom: 2px;
         
+    }
+
+    .form-text{
+        font-size: 16px;
+        color: white;
     }
 }

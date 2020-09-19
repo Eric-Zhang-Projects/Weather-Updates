@@ -4,6 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../../constants.json";
 import Navbar from '../navbar/Navbar';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
@@ -130,7 +131,7 @@ export class Register extends React.Component {
         if (this.state.nameError != 'Name'){
             textColor = 'red';
         }
-            return <label htmlFor="name" style={{ color: textColor }}>{this.state.nameError}</label>
+            return <label htmlFor="name" style={{color: textColor}}>{this.state.nameError}</label>
     }
 
     emailField = () =>{
@@ -146,7 +147,7 @@ export class Register extends React.Component {
         if (this.state.usernameError != 'Username'){
             textColor = 'red';
         }
-            return <label htmlFor="username" style={{ color: textColor }}>{this.state.usernameError}</label>
+            return <label htmlFor="username" style={{ color: textColor }}  >{this.state.usernameError}</label>
     }
 
     passwordField = () =>{
@@ -165,7 +166,7 @@ export class Register extends React.Component {
                     <img src = {loginLogo}/>
                 </div>
                 <div className = "form"> Please fill in the following information: <hr/>
-                    <div className = "form-group">
+                    <div className = "form-group" style={{"outline-color": "green"}}>
                             {this.nameField()}
                             <input type="text" name="name" placeholder="Name" value={this.state.value} onChange={this.handleChange} required/>
                         </div>
