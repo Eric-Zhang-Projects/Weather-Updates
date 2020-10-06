@@ -6,7 +6,9 @@ import NavbarLoggedIn from '../navbar/NavbarLoggedIn';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { Row, Col } from 'react-bootstrap';
 import { createBrowserHistory } from 'history';
+import AutocompleteSearch from '../autocompleteSearch/autocompleteSearch';
 
 
 export class Home extends React.Component {
@@ -85,26 +87,53 @@ export class Home extends React.Component {
             <div className = "content">
                 {this.state.info}
             </div>
-            {/* <Form>
-  <Form.Group controlId="formBasicEmail">
-    <Form.Label>Email address</Form.Label>
-    <Form.Control type="email" placeholder="Enter email" />
-    <Form.Text className="text-muted">
-      We'll never share your email with anyone else.
-    </Form.Text>
-  </Form.Group>
+<Form>
+  <Form.Row>
+    <Form.Group as={Col} controlId="formGridEmail">
+      <Form.Label>Country Name</Form.Label>
+      <AutocompleteSearch/>
+    </Form.Group>
 
-  <Form.Group controlId="formBasicPassword">
-    <Form.Label>Password</Form.Label>
-    <Form.Control type="password" placeholder="Password" />
-  </Form.Group>
-  <Form.Group controlId="formBasicCheckbox">
-    <Form.Check type="checkbox" label="Check me out" />
-  </Form.Group>
+    <Form.Group as={Col} controlId="formGridState">
+      <Form.Label>State</Form.Label>
+      <Form.Control as="select" defaultValue="Choose...">
+        <option>Choose...</option>
+        <option>...</option>
+      </Form.Control>
+    </Form.Group> 
+    
+    <Form.Group as={Col} controlId="formGridCity">
+      <Form.Label>City</Form.Label>
+      <Form.Control placeholder="City"/>
+    </Form.Group>
+    </Form.Row>
+
+<Form.Row>
+  <Col></Col>
+  <Col xs={7}>
+  OR
+  </Col>
+</Form.Row>
+
+
+  <Form.Row>
+  {/* <Form.Group as={Col} controlId="formGridPassword">
+    <Col>
+    </Col>
+</Form.Group> */}
+<Form.Group as={Col} controlId="formGridPassword"></Form.Group>
+  <Form.Group as={Col} controlId="formGridCity">
+      <Form.Label>Zip</Form.Label>
+      <Form.Control placeholder="Zip"/>
+    </Form.Group>
+
+  </Form.Row>
+
+
   <Button variant="primary" type="submit">
     Submit
   </Button>
-</Form> */}
+</Form>
             {/* <Toast show={this.setShow(true)} onClose={this.setShow(false)}>
           <Toast.Header>
             <img

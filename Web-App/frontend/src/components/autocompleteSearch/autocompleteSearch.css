@@ -1,0 +1,31 @@
+
+.AutoCopleteText input{
+    border: none;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.AutoCompleteText ul{
+    list-style-type: none;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+.AutoCompleteText ul::before{
+    content: ""
+}
+
+.AutoCompleteText li{
+    padding: 10px 5px;
+    cursor: pointer;
+}
+
+.AutoCompleteText li:hover{
+    text-decoration: underline;
+    background-color: #F1F0F0;
+
+}
