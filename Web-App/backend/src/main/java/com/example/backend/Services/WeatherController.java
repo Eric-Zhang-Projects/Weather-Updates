@@ -9,6 +9,7 @@ import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.CitiesRepo;
 import com.example.backend.Repo.CountriesRepo;
 import com.example.backend.Repo.UsersRepo;
+import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
@@ -61,6 +62,18 @@ public class WeatherController {
         return ResponseEntity.ok(cities);
     }
 
+    @RequestMapping("/findCity")
+    public ResponseEntity<?> FindCity(@RequestBody FindCityRequest city){
+        String formatted = city.getCity().substring(0, 1).toUpperCase() + city.getCity().substring(1).toLowerCase();
+        System.out.println("Searching for city: " + formatted);
+        List<CitiesDocument> cities = citiesRepo.findByName(formatted);
+        if (cities.size() > 0){
+            return ResponseEntity.ok(cities);
+        }
+        else {
+            return ResponseEntity.ok(cities);
+        }
+    }
 
     @RequestMapping("/search")
     public ResponseEntity<?> ExecuteSearch(String country, String city, String zip){

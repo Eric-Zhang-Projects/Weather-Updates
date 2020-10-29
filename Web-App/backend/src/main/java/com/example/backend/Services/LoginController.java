@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
-import com.example.backend.Responses.AuthenticationRequest;
+import com.example.backend.Requests.AuthenticationRequest;
 import com.example.backend.Responses.AuthenticationResponse;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;

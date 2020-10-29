@@ -1,4 +1,4 @@
-package com.example.backend.Responses;
+package com.example.backend.Requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
-    
-    private String username;
-    private String password;
+public class FindCityRequest {
+    private String city;
 }

@@ -10,13 +10,13 @@ import { Row, Col } from 'react-bootstrap';
 import { createBrowserHistory } from 'history';
 import AutocompleteSearch from '../autocompleteSearch/autocompleteSearch';
 
-
 export class Home extends React.Component {
     constructor(props){
         super(props);
         this.state = { 
             info: '',
-            alertVisible: false
+            alertVisible: false,
+            city: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.setShow = this.setShow.bind(this);
@@ -75,9 +75,40 @@ export class Home extends React.Component {
             });
         }).catch(err => {
             console.log(err.messasge);
-            alert("Valid credentials but failed to log in");
+            //alert("Valid credentials but failed to log in");
          //   this.props.history.push('/login');
         });
+    }
+
+    handleSubmit = (event) => {
+      event.preventDefault();
+      const jwt = getJwt();
+      if (jwt == null){
+          this.props.history.push('/login');
+      }
+      console.log('passed in jwt:\n' + jwt);
+      axios.post(`${BASE_URL}/findCity`, 
+      { city: this.state.city},
+      { headers: {'Authorization': `Bearer ${jwt}`}})
+      .then( result => {
+        //console.log("check if city exists: " + JSON.stringify(result.data));
+        if (JSON.stringify(result.data).length > 2){
+          // result.data.map((city)=>{
+          //   console.log(city + " " + city.name);
+          // })
+          console.log("hello");
+          this.props.history.push(
+            '/searchResults', {
+            cities: result.data});
+        }
+        else{
+          console.log("city does not exist");
+        }
+      }).catch(err => {
+        console.log(err.messasge);
+     //   this.props.history.push('/login');
+    });
+
     }
 
     render() {
@@ -85,55 +116,20 @@ export class Home extends React.Component {
             <NavbarLoggedIn/>
             <this.SuccessfulAlert/>
             <div className = "content">
+              {/*users pinned location weather info */}
                 {this.state.info}
             </div>
-<Form>
-  <Form.Row>
-    <Form.Group as={Col} controlId="formGridEmail">
-      <Form.Label>Country Name</Form.Label>
-      <AutocompleteSearch/>
-    </Form.Group>
 
-    <Form.Group as={Col} controlId="formGridState">
-      <Form.Label>State</Form.Label>
-      <Form.Control as="select" defaultValue="Choose...">
-        <option>Choose...</option>
-        <option>...</option>
-      </Form.Control>
-    </Form.Group> 
-    
-    <Form.Group as={Col} controlId="formGridCity">
-      <Form.Label>City</Form.Label>
-      <Form.Control placeholder="City"/>
-    </Form.Group>
-    </Form.Row>
-
-<Form.Row>
-  <Col></Col>
-  <Col xs={7}>
-  OR
-  </Col>
-</Form.Row>
+            <div className = "search">
+              <h1>Search by city!</h1>
+              <input className = "city" name = "city" value = {this.state.value} onChange = {this.handleChange} placeholder = "Enter city name"/>
+              <Button type="button" className="btn" onClick={this.handleSubmit}>
+                Go!
+              </Button>
+            </div>
 
 
-  <Form.Row>
-  {/* <Form.Group as={Col} controlId="formGridPassword">
-    <Col>
-    </Col>
-</Form.Group> */}
-<Form.Group as={Col} controlId="formGridPassword"></Form.Group>
-  <Form.Group as={Col} controlId="formGridCity">
-      <Form.Label>Zip</Form.Label>
-      <Form.Control placeholder="Zip"/>
-    </Form.Group>
 
-  </Form.Row>
-
-
-  <Button variant="primary" type="submit">
-    Submit
-  </Button>
-</Form>
             {/* <Toast show={this.setShow(true)} onClose={this.setShow(false)}>
           <Toast.Header>
             <img
