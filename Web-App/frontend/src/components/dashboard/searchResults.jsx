@@ -19,37 +19,48 @@ constructor(props){
     super(props);
 
     this.state = {
-        cities: []
+        cities: [],
     }
-
-
-
 }
 
     componentDidMount() {
         const history = createBrowserHistory();
         const location = history.location;
-        this.setState({cities: location.state.cities});
-        console.log(location.state.cities);
-
+        const citiesList = [];
+        location.state.cities.map((city) => {
+            citiesList.push(city);
+        });
+        console.log(citiesList);
+        this.setState(state =>{
+            //const cities = [...state.cities, citiesList];
+            const cities = state.cities.concat(citiesList);
+            console.log(cities);
+            return {
+                cities,
+            };
+        });
+        console.log(this.state.cities);
     }
 
-    // citiesList = () => {
-    //     const {name, country, lat, lon } = props;
-    //     return (
-    //         <div className = "list">
-    //             <div className ="name">{name}</div>
-    //             <div className ="country">{country}</div>
-    //             <div className ="lat">{lat}</div>
-    //             <div className ="lon">{lon}</div>
-    //         </div>
-    //     )
-    // }
-
-
     render () {
-        return <div>
+        return <div className = "base-container">
             <NavbarLoggedIn/>
-            results!</div>
+            <div className = "content">
+                <h1>Results for </h1>
+                <ul>
+                {this.state.cities.map((city) => (
+                <li key = {city.id} style ={{"listStyleType": "none"}}>
+                    <div className="card" style = {{"marginBottom": "20px"}}>
+                        <div className="card-body">
+                        <h5 className="card-title">{city.name} ({city.country})</h5>
+                        <p className="card-text">Latitude: {city.coord.lat}, Longitude: {city.coord.lon}</p>
+                        <a href="#" className="btn btn-primary">Get Weather Here!</a>
+                        </div>
+                    </div>
+                </li>
+            ))}
+            </ul>
+            </div>
+            </div>
     }
 }

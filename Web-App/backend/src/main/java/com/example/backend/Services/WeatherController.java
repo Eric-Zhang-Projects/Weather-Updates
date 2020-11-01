@@ -12,6 +12,7 @@ import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
+import com.example.backend.Responses.FindCityResponse;
 import com.example.backend.Responses.UpdateUser;
 import com.example.backend.Responses.User;
 import com.example.backend.Responses.WeatherSearch;
@@ -64,14 +65,28 @@ public class WeatherController {
 
     @RequestMapping("/findCity")
     public ResponseEntity<?> FindCity(@RequestBody FindCityRequest city){
-        String formatted = city.getCity().substring(0, 1).toUpperCase() + city.getCity().substring(1).toLowerCase();
-        System.out.println("Searching for city: " + formatted);
-        List<CitiesDocument> cities = citiesRepo.findByName(formatted);
-        if (cities.size() > 0){
-            return ResponseEntity.ok(cities);
+        String[] cityName = city.getCity().split(" ");
+        String formatted = "";
+        for(String part : cityName){
+            formatted += part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase() + " ";
+        }
+        System.out.println("Searching for city: " + formatted.trim());
+        List<CitiesDocument> cities = citiesRepo.findByName(formatted.trim());
+        List<FindCityResponse> citiesResponse = new ArrayList<>();
+        cities.stream().forEach(cityDocument -> {
+            FindCityResponse cityResponse = new FindCityResponse();
+            cityResponse.setId(cityDocument.getId());
+            cityResponse.setName(cityDocument.getName());
+            cityResponse.setCountry(cityDocument.getCountry());
+            cityResponse.setCoord(cityDocument.getCoord());
+            cityResponse.setAdministrativeAreaLevel("");
+            citiesResponse.add(cityResponse);
+        });
+        if (citiesResponse.size() > 0){
+            return ResponseEntity.ok(citiesResponse);
         }
         else {
-            return ResponseEntity.ok(cities);
+            return ResponseEntity.ok(citiesResponse);
         }
     }
 
