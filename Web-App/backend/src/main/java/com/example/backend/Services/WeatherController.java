@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.backend.Documents.CitiesDocument;
+import com.example.backend.Documents.Coordinates;
 import com.example.backend.Documents.CountriesDocument;
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.CitiesRepo;
 import com.example.backend.Repo.CountriesRepo;
+import com.example.backend.Repo.UsCitiesRepo;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Responses.DashboardResponse;
@@ -48,21 +50,25 @@ public class WeatherController {
     @Autowired 
     private CitiesRepo citiesRepo;
 
-    @RequestMapping("/countries")
-    public ResponseEntity<?> GetCountries(){
-        System.out.println("hit countries");
-        List<CountriesDocument> countries = countriesRepo.findAll();
-        return ResponseEntity.ok(countries);
-    }
+    @Autowired
+    private UsCitiesRepo usCitiesRepo;
 
-    @RequestMapping("/cities")
-    public ResponseEntity<?> GetCities(@RequestBody String country){
-        System.out.println("Hit cities " + country);
-        //Return list of cities
-        List<CitiesDocument> cities = citiesRepo.findFirst100ByCountry(country);
-        return ResponseEntity.ok(cities);
-    }
+    // @RequestMapping("/countries")
+    // public ResponseEntity<?> GetCountries(){
+    //     System.out.println("hit countries");
+    //     List<CountriesDocument> countries = countriesRepo.findAll();
+    //     return ResponseEntity.ok(countries);
+    // }
 
+    // @RequestMapping("/cities")
+    // public ResponseEntity<?> GetCities(@RequestBody String country){
+    //     System.out.println("Hit cities " + country);
+    //     //Return list of cities
+    //     List<CitiesDocument> cities = citiesRepo.findFirst100ByCountry(country);
+    //     return ResponseEntity.ok(cities);
+    // }
+
+    //Find city entered in home.jsx
     @RequestMapping("/findCity")
     public ResponseEntity<?> FindCity(@RequestBody FindCityRequest city){
         String[] cityName = city.getCity().split(" ");
@@ -71,25 +77,41 @@ public class WeatherController {
             formatted += part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase() + " ";
         }
         System.out.println("Searching for city: " + formatted.trim());
-        List<CitiesDocument> cities = citiesRepo.findByName(formatted.trim());
         List<FindCityResponse> citiesResponse = new ArrayList<>();
-        cities.stream().forEach(cityDocument -> {
+        usCitiesRepo.findByCityOrderByPopulationDesc(formatted.trim()).stream().forEach(usCityDocument -> {
             FindCityResponse cityResponse = new FindCityResponse();
-            cityResponse.setId(cityDocument.getId());
-            cityResponse.setName(cityDocument.getName());
-            cityResponse.setCountry(cityDocument.getCountry());
-            cityResponse.setCoord(cityDocument.getCoord());
-            cityResponse.setAdministrativeAreaLevel("");
+            cityResponse.setCity(usCityDocument.getCity());
+            cityResponse.setStateId(usCityDocument.getState_id());
+            cityResponse.setStateName(usCityDocument.getState_name());
+            cityResponse.setCountyName(usCityDocument.getCounty_name());
+            cityResponse.setTimezone(usCityDocument.getTimezone().replace("_", " "));
+            cityResponse.setLat(usCityDocument.getLat());
+            cityResponse.setLng(usCityDocument.getLng());
+            cityResponse.setPopulation(usCityDocument.getPopulation());
+            cityResponse.setDensity(usCityDocument.getDensity());
             citiesResponse.add(cityResponse);
         });
-        if (citiesResponse.size() > 0){
-            return ResponseEntity.ok(citiesResponse);
-        }
-        else {
-            return ResponseEntity.ok(citiesResponse);
-        }
+        return ResponseEntity.ok(citiesResponse);
+        // List<CitiesDocument> cities = citiesRepo.findByName(formatted.trim());
+        // List<FindCityResponse> citiesResponse = new ArrayList<>();
+        // cities.stream().forEach(cityDocument -> {
+        //     FindCityResponse cityResponse = new FindCityResponse();
+        //     cityResponse.setId(cityDocument.getId());
+        //     cityResponse.setName(cityDocument.getName());
+        //     cityResponse.setCountry(cityDocument.getCountry());
+        //     cityResponse.setCoord(cityDocument.getCoord());
+        //     cityResponse.setAdministrativeAreaLevel("");
+        //     citiesResponse.add(cityResponse);
+        // });
+        // if (citiesResponse.size() > 0){
+        //     return ResponseEntity.ok(citiesResponse);
+        // }
+        // else {
+        //     return ResponseEntity.ok(citiesResponse);
+        // }
     }
 
+    //change request mapping to /searchResults, and show the weather checker
     @RequestMapping("/search")
     public ResponseEntity<?> ExecuteSearch(String country, String city, String zip){
         //access api call

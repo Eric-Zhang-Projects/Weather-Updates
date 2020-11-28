@@ -4,6 +4,7 @@ import "./accountStyles.scss";
 
 export { Home } from "./home";
 export { SearchResults } from "./searchResults";
+export { WeatherResults } from "./weatherResults";
 export { Account } from "./account";
 export { Logout } from "./logout";
 export { UpdateInfo } from "./updateInfo";

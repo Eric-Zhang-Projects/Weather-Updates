@@ -8,17 +8,27 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Component
 public class FindCityResponse {
 
-    private int id;
-    private String name;
-    private String country;
-    private Coordinates coord; 
-    private String administrativeAreaLevel;
+    // private int id;
+    // private String name;
+    // private String country;
+    // private Coordinates coord; 
+    // private String administrativeAreaLevel;
+
+    private String city;
+    private String stateId;
+    private String stateName;
+    private String countyName;
+    private double lat;
+    private double lng;
+    private Integer population;
+    private Integer density;
+    private String timezone;
+    private Integer ranking;
     
 }

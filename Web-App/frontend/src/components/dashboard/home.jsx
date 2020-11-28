@@ -99,7 +99,8 @@ export class Home extends React.Component {
           console.log("hello");
           this.props.history.push(
             '/searchResults', {
-            cities: result.data});
+            cities: result.data,
+            cityName: this.state.city});
         }
         else{
           console.log("city does not exist");
