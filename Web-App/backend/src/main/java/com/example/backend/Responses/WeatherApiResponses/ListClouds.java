@@ -1,4 +1,4 @@
-package com.example.backend.Responses.WeatherResponses;
+package com.example.backend.Responses.WeatherApiResponses;
 
 import org.springframework.stereotype.Component;
 

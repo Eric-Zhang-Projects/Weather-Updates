@@ -31,6 +31,7 @@ export class About extends React.Component {
                 <li> create lambda with cron job</li>
                 <li> styling smh</li>
                 <li> clean up code and imports</li>
+                <li>filter by us vs country</li>
 
 
 

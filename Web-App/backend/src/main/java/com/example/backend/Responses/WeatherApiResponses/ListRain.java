@@ -1,4 +1,4 @@
-package com.example.backend.Responses.WeatherResponses;
+package com.example.backend.Responses.WeatherApiResponses;
 
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Component
-public class ListSnow {
-    
+public class ListRain {
+
     private float test;
+    
 }

@@ -8,8 +8,7 @@ import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
 import com.example.backend.Responses.User;
-import com.example.backend.Responses.WeatherSearch;
-import com.example.backend.Responses.WeatherResponses.ForecastResponse;
+import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 
@@ -51,7 +50,7 @@ public class DashboardController {
         
         DashboardResponse dashboardResponse = new DashboardResponse();
         dashboardResponse.setGreeting("hey bro whats good");
-        ForecastResponse result = new ForecastResponse();
+        ApiForecastResponse result = new ApiForecastResponse();
 
         return ResponseEntity.ok(result);
     }

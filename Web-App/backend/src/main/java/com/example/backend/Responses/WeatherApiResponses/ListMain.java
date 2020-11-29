@@ -1,4 +1,4 @@
-package com.example.backend.Responses.WeatherResponses;
+package com.example.backend.Responses.WeatherApiResponses;
 
 import org.springframework.stereotype.Component;
 
@@ -14,4 +14,7 @@ public class ListMain {
     
     private float temp;
     private float feels_like;
+    private float temp_min;
+    private float temp_max;
+    private Integer humidity;
 }

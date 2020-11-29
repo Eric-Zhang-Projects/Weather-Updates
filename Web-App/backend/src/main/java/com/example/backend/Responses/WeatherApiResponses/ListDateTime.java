@@ -1,4 +1,4 @@
-package com.example.backend.Responses;
+package com.example.backend.Responses.WeatherApiResponses;
 
 import org.springframework.stereotype.Component;
 
@@ -10,11 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Component
-public class WeatherSearch {
+public class ListDateTime {
 
-    private String cityName;
-    private String geoCoordinates;
-    private String zip;
-    
+    private String dt_txt;
     
 }

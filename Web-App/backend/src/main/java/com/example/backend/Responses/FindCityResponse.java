@@ -14,12 +14,6 @@ import lombok.NoArgsConstructor;
 @Component
 public class FindCityResponse {
 
-    // private int id;
-    // private String name;
-    // private String country;
-    // private Coordinates coord; 
-    // private String administrativeAreaLevel;
-
     private String city;
     private String stateId;
     private String stateName;

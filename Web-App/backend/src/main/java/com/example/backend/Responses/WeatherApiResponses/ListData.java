@@ -1,4 +1,4 @@
-package com.example.backend.Responses.WeatherResponses;
+package com.example.backend.Responses.WeatherApiResponses;
 
 import java.util.ArrayList;
 
@@ -14,6 +14,7 @@ import lombok.Setter;
 @Component
 public class ListData {
     
+    private Integer dt;
     private ListMain main;
     private ArrayList<ListWeather> weather;
     private ListClouds clouds;

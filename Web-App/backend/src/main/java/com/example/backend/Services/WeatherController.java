@@ -12,13 +12,17 @@ import com.example.backend.Repo.CountriesRepo;
 import com.example.backend.Repo.UsCitiesRepo;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
+import com.example.backend.Requests.GetWeatherForCityRequest;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.FindCityResponse;
 import com.example.backend.Responses.UpdateUser;
 import com.example.backend.Responses.User;
-import com.example.backend.Responses.WeatherSearch;
-import com.example.backend.Responses.WeatherResponses.ForecastResponse;
+import com.example.backend.Responses.WeatherApiResponses.ListData;
+import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
+import com.example.backend.Responses.WeatherForecastResponses.DayResponse;
+import com.example.backend.Responses.WeatherForecastResponses.WeatherResponse;
+import com.example.backend.Responses.WeatherForecastResponses.ForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 
@@ -111,39 +115,88 @@ public class WeatherController {
         // }
     }
 
-    //change request mapping to /searchResults, and show the weather checker
-    @RequestMapping("/search")
-    public ResponseEntity<?> ExecuteSearch(String country, String city, String zip){
+    //Show Weather data for a specific city after searchResults page
+    @RequestMapping("/getWeatherForCity")
+    public ResponseEntity<?> GetWeatherForCity(@RequestBody GetWeatherForCityRequest cityWeatherRequest){
         //access api call
         System.out.println("hit weather search");
-        // WeatherSearch weatherSearch = new WeatherSearch();
-        // weatherSearch.setZip("08550");
-        // RestTemplate restTemplate = new RestTemplate();
-        // String uri = "http://api.openweathermap.org/data/2.5/forecast?";
-        // if (weatherSearch.getCityName() != null){
-        //     uri += "q=" + weatherSearch.getCityName() + "&units=imperial&appid=" + apiKey;
-        // }
-        // else if (weatherSearch.getZip() != null){
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://api.openweathermap.org/data/2.5/forecast?";
+        if (cityWeatherRequest.getCityName() != null && cityWeatherRequest.getCityState() != null){
+            uri += "q=" + cityWeatherRequest.getCityName() + "," + cityWeatherRequest.getCityState() + ",us&units=imperial&appid=" + apiKey;
+        }
+        // else if (cityWeatherRequest.getZip() != null){
         //     uri += "zip=" + weatherSearch.getZip() + "&units=imperial&appid=" + apiKey;
         // }
         // else if (weatherSearch.getGeoCoordinates() !=null ){
         //     uri += weatherSearch.getGeoCoordinates() + "&units=imperial&appid=" + apiKey;
         // }
-        // System.out.println("uri at: " + uri);
-        // ResponseEntity<ForecastResponse> forecastResponse = restTemplate.exchange(
-        //     uri, HttpMethod.GET, null,
-        //     new ParameterizedTypeReference<ForecastResponse>(){});
+        System.out.println("uri at: " + uri);
+        ResponseEntity<ApiForecastResponse> apiForecastResponse = restTemplate.exchange(
+            uri, HttpMethod.GET, null,
+            new ParameterizedTypeReference<ApiForecastResponse>(){});
 
-        // ForecastResponse result = forecastResponse.getBody();
-        // System.out.println("feels like" + result.getList().get(0).getMain().getFeels_like());
-        // System.out.println("des " + result.getList().get(0).getWeather().get(0).getDescription());
-        // System.out.println("? " + result.getCity().getId() + " at" +  result.getCity().getName());
-        // System.out.println("dt " + result.getList().get(0).getDt_txt());
-        DashboardResponse dashboardResponse = new DashboardResponse();
-        dashboardResponse.setGreeting("hey bro whats good");
-             ForecastResponse result = new ForecastResponse();
+        ApiForecastResponse result = apiForecastResponse.getBody();
+        return ResponseEntity.ok(formatWeatherResponse(result));
+    }
 
-        return ResponseEntity.ok(result);
+    public WeatherResponse formatWeatherResponse(ApiForecastResponse result){
+        WeatherResponse weatherResponse = new WeatherResponse();
+        weatherResponse.setId(result.getCity().getId());
+        int startTime = result.getList().get(0).getDt();
+        int endDayTime = startTime + (3600 * 3 * 8);
+        float lowTemp = result.getList().get(0).getMain().getTemp_min();
+        float highTemp = result.getList().get(0).getMain().getTemp_max();
+        float totalTemp = 0;
+        int intervalCounter = 0;
+        for (int i = 0; i< result.getList().size(); i++){
+            ListData data = result.getList().get(i);
+            if (data.getDt() <= endDayTime){
+                DayResponse day = new DayResponse();
+                day.setTemp(data.getMain().getTemp());
+                day.setFeelsLike(data.getMain().getFeels_like());
+                day.setHumidity(data.getMain().getHumidity());
+                data.getWeather().stream().forEach(weather -> day.getDescriptions().add(weather.getDescription()));
+                //day.setDescriptions(data.getWeather());
+                day.setDateTime(data.getDt_txt());
+                weatherResponse.getDayResponse().add(day);
+            }
+
+            totalTemp += data.getMain().getTemp();
+            lowTemp = checkMin(lowTemp, data.getMain().getTemp_min());
+            highTemp = checkMax(highTemp, data.getMain().getTemp_max());
+           // System.out.println("i: " + i + " time: " + data.getDt_txt() + " txt: " + (data.getDt()-startTime) + " total: " + totalTemp + " added: " + data.getMain().getTemp() + " high: " + highTemp + " lowTemp: " + lowTemp);
+            if (data.getDt() != startTime && intervalCounter == 8){
+                ForecastResponse forecastResponse = new ForecastResponse();
+                forecastResponse.setMinTemp(lowTemp);
+                forecastResponse.setMaxTemp(highTemp);
+                forecastResponse.setAvgTemp(totalTemp/9);
+                data.getWeather().stream().forEach(weather-> forecastResponse.getDescriptions().add(weather.getDescription()));
+                weatherResponse.getForecastResponse().add(forecastResponse);
+                lowTemp = data.getMain().getTemp_min();
+                highTemp = data.getMain().getTemp_max();
+                totalTemp = data.getMain().getTemp();
+                intervalCounter = 0;
+                i--;
+            } else{
+                intervalCounter++;
+            }
+        }
+        return weatherResponse;
+    }
+
+    public float checkMin(float min, float curr){
+        if (curr < min){
+            min = curr;
+        }
+        return min;
+    }
+
+    public float checkMax(float max, float curr){
+        if (curr > max){
+            max = curr;
+        }
+        return max;
     }
     
 }

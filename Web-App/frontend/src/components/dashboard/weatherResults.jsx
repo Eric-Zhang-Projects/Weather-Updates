@@ -23,12 +23,39 @@ export class WeatherResults extends React.Component {
     }
 
     componentDidMount() {
+        const jwt = getJwt();
+        if (jwt == null){
+            this.props.history.push('/login');
+        }
         const history = createBrowserHistory();
         const location = history.location;
         this.setState({
             cityName: location.state.cityName,
             cityState: location.state.cityState
         })
+        axios.post(`${BASE_URL}/getWeatherForCity`, 
+        {cityName: location.state.cityName,
+        cityState: location.state.cityState},
+        { headers: {'Authorization': `Bearer ${jwt}`}})
+        .then( result => {
+        console.log("check if city exists: " + JSON.stringify(result.data));
+        // if (JSON.stringify(result.data).length > 2){
+        //     // result.data.map((city)=>{
+        //     //   console.log(city + " " + city.name);
+        //     // })
+        //     console.log("hello");
+        //     this.props.history.push(
+        //       '/searchResults', {
+        //       cities: result.data,
+        //       cityName: this.state.city});
+        //   }
+        //   else{
+        //     console.log("city does not exist");
+        //   }
+        }).catch(err => {
+          console.log(err.messasge);
+       //   this.props.history.push('/login');
+      });
     }
 
     render () {
