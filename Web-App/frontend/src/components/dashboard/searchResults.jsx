@@ -61,9 +61,9 @@ constructor(props){
                 <h1>Results for "{this.state.cityName}"</h1>
                 <hr/>
                 <ul>
-                {this.state.cities.map((city) => (
-                    <Accordion defaultActiveKey="0">
-                <li key = {city.id} style ={{"listStyleType": "none"}}>
+                {this.state.cities.map((city, i) => (
+                    <Accordion key={i}>
+                <li key = {i} style ={{"listStyleType": "none"}}>
                     <div className="card" style = {{"marginBottom": "20px"}}>
                         <div className="card-body">
                         <h5 className="card-title">{city.city}, {city.stateName} ({city.stateId})</h5>

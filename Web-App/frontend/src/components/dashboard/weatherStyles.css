@@ -1,0 +1,30 @@
+.weather-container-base {
+
+
+
+}
+
+.weather-container-main{
+    height: 80vh;
+    width: 100%;
+    font-family: "Open Sans", sans-serif;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.weather-tabs{
+    width: 95%;
+    border: 1px solid;
+    border-color: #D2D1D1;
+    border-radius: 7px;
+    padding: 4%;
+    margin-left: 2px;
+    overflow-x: scroll;
+    white-space: nowrap;
+    height: 90%;
+}
+
+.weather-card{
+    display: inline-block
+}

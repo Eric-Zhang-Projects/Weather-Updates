@@ -149,9 +149,10 @@ public class WeatherController {
         float highTemp = result.getList().get(0).getMain().getTemp_max();
         float totalTemp = 0;
         int intervalCounter = 0;
+        boolean isToday = true;
         for (int i = 0; i< result.getList().size(); i++){
             ListData data = result.getList().get(i);
-            if (data.getDt() <= endDayTime){
+            if (data.getDt() <= endDayTime && isToday){
                 DayResponse day = new DayResponse();
                 day.setTemp(data.getMain().getTemp());
                 day.setFeelsLike(data.getMain().getFeels_like());
@@ -170,7 +171,9 @@ public class WeatherController {
                 ForecastResponse forecastResponse = new ForecastResponse();
                 forecastResponse.setMinTemp(lowTemp);
                 forecastResponse.setMaxTemp(highTemp);
-                forecastResponse.setAvgTemp(totalTemp/9);
+                float temp = totalTemp/9;
+                forecastResponse.setAvgTemp((Math.round(temp*100.0))/100.0f);
+                forecastResponse.setDate(data.getDt_txt().substring(0,10));
                 data.getWeather().stream().forEach(weather-> forecastResponse.getDescriptions().add(weather.getDescription()));
                 weatherResponse.getForecastResponse().add(forecastResponse);
                 lowTemp = data.getMain().getTemp_min();
@@ -178,6 +181,7 @@ public class WeatherController {
                 totalTemp = data.getMain().getTemp();
                 intervalCounter = 0;
                 i--;
+                isToday=false;
             } else{
                 intervalCounter++;
             }

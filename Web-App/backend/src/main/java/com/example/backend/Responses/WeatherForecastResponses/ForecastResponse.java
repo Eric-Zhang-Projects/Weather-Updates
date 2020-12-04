@@ -15,6 +15,7 @@ public class ForecastResponse {
     private float avgTemp;
     private float minTemp;
     private float maxTemp;
+    private String date;
     private Set<String> descriptions = new TreeSet<>();
 
 }
