@@ -4,7 +4,6 @@ import axios from "axios";
 import { BASE_URL } from "../../constants.json";
 import Navbar from '../navbar/Navbar';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
@@ -36,25 +35,25 @@ export class Register extends React.Component {
     handleValidation = () =>{
         console.log("entering validation");
         var passed = true;
-        if (this.state.name == ""){
+        if (this.state.name === ""){
             passed = false;
             this.setState({
                 nameError: "Name field cannot be empty"
             })
         }
-        if (this.state.email == ""){
+        if (this.state.email === ""){
             passed = false;
             this.setState({
                 emailError: "Email field cannot be empty"
             })
         }
-        if (this.state.username == ""){
+        if (this.state.username === ""){
             passed = false;
             this.setState({
                 usernameError: "Username field cannot be empty"
             })
         }
-        if (this.state.password ==""){
+        if (this.state.password ===""){
             passed = false;
             this.setState({
                 passwordError: "Password field cannot be empty"
@@ -128,7 +127,7 @@ export class Register extends React.Component {
 
     nameField = () =>{
         var textColor = 'black';
-        if (this.state.nameError != 'Name'){
+        if (this.state.nameError !== 'Name'){
             textColor = 'red';
         }
             return <label htmlFor="name" style={{color: textColor}}>{this.state.nameError}</label>
@@ -136,7 +135,7 @@ export class Register extends React.Component {
 
     emailField = () =>{
         var textColor = 'black';
-        if (this.state.emailError != 'Email'){
+        if (this.state.emailError !== 'Email'){
             textColor = 'red';
         }
             return <label htmlFor="email" style={{ color: textColor }}>{this.state.emailError}</label>
@@ -144,7 +143,7 @@ export class Register extends React.Component {
 
     usernameField = () =>{
         var textColor = 'black';
-        if (this.state.usernameError != 'Username'){
+        if (this.state.usernameError !== 'Username'){
             textColor = 'red';
         }
             return <label htmlFor="username" style={{ color: textColor }}  >{this.state.usernameError}</label>
@@ -152,7 +151,7 @@ export class Register extends React.Component {
 
     passwordField = () =>{
         var textColor = 'black';
-        if (this.state.passwordError != 'Password'){
+        if (this.state.passwordError !== 'Password'){
             textColor = 'red';
         }
             return <label htmlFor="password" style={{ color: textColor }}>{this.state.passwordError}</label>
@@ -163,7 +162,7 @@ export class Register extends React.Component {
             <Navbar />
             <div className = "content">
                 <div className = "image">
-                    <img src = {loginLogo}/>
+                    <img src = {loginLogo} alt="register logo"/>
                 </div>
                 <div className = "form"> Please fill in the following information: <hr/>
                     <div className = "form-group" style={{"outline-color": "green"}}>

@@ -1,11 +1,10 @@
 import React from "react";
-import Axios from "axios";
+import axios from "axios";
 import { BASE_URL } from "../../constants.json";
-import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
+import { getJwt } from '../helpers/jwtHelper';
 import Button from 'react-bootstrap/Button';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import { createBrowserHistory } from 'history';
-import Alert from 'react-bootstrap/Alert';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
@@ -78,10 +77,6 @@ export class UpdateInfo extends React.Component {
     componentDidMount(){
 
         const jwt = getJwt();
-        if (!isLoggedIn){
-            alert("Please log in");
-            this.props.history.push('/login');
-        }
         console.log('passed in jwt:\n' + jwt);
 
         const history = createBrowserHistory();
@@ -98,9 +93,8 @@ export class UpdateInfo extends React.Component {
     handleConfirmChanges = (event) => {
         event.preventDefault();
 
-
-        console.log("change? " + (this.state.newName == '' && this.state.newUsername == '' && this.state.newEmail == '' && this.state.newPassword == ''));
-        if (this.state.newName == '' && this.state.newUsername == '' && this.state.newEmail == '' && this.state.newPassword == ''){
+        console.log("change? " + (this.state.newName === '' && this.state.newUsername === '' && this.state.newEmail === '' && this.state.newPassword === ''));
+        if (this.state.newName === '' && this.state.newUsername === '' && this.state.newEmail === '' && this.state.newPassword === ''){
             this.setState({enterAllFields: "Please enter at least one field to update, or cancel",
             allFieldsTextColor: 'red',
             emailError: 'Email',
@@ -109,7 +103,7 @@ export class UpdateInfo extends React.Component {
         }
         else{
             console.log("passed");
-            if (this.state.newUsername!= ''){
+            if (this.state.newUsername!== ''){
                 console.log("changed username");
                 this.setState({
                     title: "This action will require you to re-log in",
@@ -130,7 +124,7 @@ export class UpdateInfo extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        if(prevState.title!==this.state.title && this.state.title!='-1'){
+        if(prevState.title!==this.state.title && this.state.title!=='-1'){
             console.log("state change");
             this.setState({successAlert: this.confirmAlert()}, () =>{
                 console.log(this.state.title);
@@ -151,7 +145,7 @@ export class UpdateInfo extends React.Component {
         const jwt = getJwt();
 
         console.log("current name: " + this.state.oldName + " " +this.state.newName);
-        Axios.post(`${BASE_URL}/updateInfo`, {
+        axios.post(`${BASE_URL}/updateInfo`, {
             oldName: this.state.oldName,
             oldEmail: this.state.oldEmail,
             oldUsername: this.state.oldUsername,
@@ -166,7 +160,7 @@ export class UpdateInfo extends React.Component {
 
             if(!res.data.duplicateUsername && !res.data.duplicateEmail){
                 //alert("New User successfully created! Please login");
-                if (this.state.newUsername != ""){
+                if (this.state.newUsername !== ""){
                 this.setState({
                     successMessage: "Your credentials have been updated. Please login again with your new credentials!",
                     redirectTo: '/logout'
@@ -202,7 +196,7 @@ export class UpdateInfo extends React.Component {
 
     emailField = () =>{
         var textColor = 'black';
-        if (this.state.emailError != 'Email'){
+        if (this.state.emailError !== 'Email'){
             textColor = 'red';
         }
             return <label htmlFor="email" style={{ color: textColor }}>{this.state.emailError}</label>
@@ -210,7 +204,7 @@ export class UpdateInfo extends React.Component {
 
     usernameField = () =>{
         var textColor = 'black';
-        if (this.state.usernameError != 'Username'){
+        if (this.state.usernameError !== 'Username'){
             textColor = 'red';
         }
             return <label htmlFor="username" style={{ color: textColor }}>{this.state.usernameError}</label>

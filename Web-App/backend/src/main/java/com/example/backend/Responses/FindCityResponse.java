@@ -1,7 +1,5 @@
 package com.example.backend.Responses;
 
-import com.example.backend.Documents.Coordinates;
-
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;

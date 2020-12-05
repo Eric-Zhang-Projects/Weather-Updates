@@ -1,12 +1,7 @@
 import React from "react";
-import loginLogo from "../../images/loginLogo.png";
 import Navbar from "../navbar/Navbar";
 
 export class About extends React.Component {
-
-    constructor(props){
-        super(props);
-    }
 
     render() {
         return <div>

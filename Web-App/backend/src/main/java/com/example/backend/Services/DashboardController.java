@@ -1,21 +1,15 @@
 package com.example.backend.Services;
 
-import java.util.List;
-
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
-import com.example.backend.Responses.User;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
@@ -38,20 +31,15 @@ public class DashboardController {
     private UsersRepo usersRepo;
 
     @Autowired
-    private DashboardResponse dashboardResponse;
-
-    @Autowired
     private ExistingUserCheck existingUserCheck;
 
     @RequestMapping("/dashboard")
     public ResponseEntity<?> Dashboard(){
         //Dashboard will load user's city weather info, or if n/a some random city info
         System.out.println("hit dashboard");
-        
         DashboardResponse dashboardResponse = new DashboardResponse();
         dashboardResponse.setGreeting("hey bro whats good");
         ApiForecastResponse result = new ApiForecastResponse();
-
         return ResponseEntity.ok(result);
     }
 

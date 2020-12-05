@@ -83,7 +83,7 @@ export class Login extends React.Component {
             <Navbar />
             <div className = "content">
                 <div className = "image">
-                    <img src = {loginLogo}/>
+                    <img src = {loginLogo} alt="Login Logo"/>
                 </div>
                 <div className = "form">
                     <div className = "form-group">

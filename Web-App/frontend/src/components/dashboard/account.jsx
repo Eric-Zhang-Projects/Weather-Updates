@@ -1,7 +1,7 @@
 import React from "react";
-import Axios from "axios";
+import axios from "axios";
 import { BASE_URL } from "../../constants.json";
-import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
+import { getJwt } from '../helpers/jwtHelper';
 import Button from 'react-bootstrap/Button';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 
@@ -26,13 +26,9 @@ export class Account extends React.Component {
     componentDidMount(){
 
         const jwt = getJwt();
-        if (!isLoggedIn){
-            alert("Please log in");
-            this.props.history.push('/login');
-        }
         console.log('passed in jwt:\n' + jwt);
 
-        Axios.get(`${BASE_URL}/account`, { headers: {'Authorization': `Bearer ${jwt}`}})
+        axios.get(`${BASE_URL}/account`, { headers: {'Authorization': `Bearer ${jwt}`}})
         .then(result => {
             console.log(result.data.username);
             this.setState({
@@ -43,7 +39,7 @@ export class Account extends React.Component {
                 city: result.data.city,
                 zip: result.data.zip
             });
-            if (result.data.city == "" || result.data.zip ==""){
+            if (result.data.city === "" || result.data.zip ===""){
                 this.setState({
                     city: 'N/A',
                     zip: 'N/A'

@@ -1,7 +1,5 @@
 package com.example.backend.Responses.WeatherApiResponses;
 
-import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
-
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;

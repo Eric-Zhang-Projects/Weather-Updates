@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { MenuItems } from "./MenuItems";
+import React from 'react';
 import { MenuItemsLoggedIn } from "./MenuItemsLoggedIn";
 import './Navbar.css';
-import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
+//import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
 
 //https://www.youtube.com/watch?v=fL8cFqhTHwA
 

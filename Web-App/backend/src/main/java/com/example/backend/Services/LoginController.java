@@ -1,33 +1,23 @@
 package com.example.backend.Services;
 
-import java.util.List;
-
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.AuthenticationRequest;
 import com.example.backend.Responses.AuthenticationResponse;
-import com.example.backend.Responses.DashboardResponse;
 import com.example.backend.Responses.DuplicateUserError;
-import com.example.backend.Responses.LoginUser;
 import com.example.backend.Responses.User;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,25 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @Autowired
-    private User user;
-
-    @Autowired
-    private UsersDocument usersDocument;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private MyUserDetailsService myUserDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @Autowired
-    private DashboardResponse dashboardResponse;
-
-    @Autowired
-    private AuthenticationResponse authenticationResponse;
 
     @Autowired
     private UsersRepo usersRepo;
@@ -76,33 +51,7 @@ public class LoginController {
             usersRepo.save(usersDocument);
         }
         return ResponseEntity.ok(duplicateUserError);
-        // DuplicateUserError duplicateUserError = new DuplicateUserError();
-        // List<UsersDocument> listofExistingUsers = usersRepo.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-        //  if (listofExistingUsers.isEmpty()){
-        //      System.out.println("Unique user registration");
-        //      usersRepo.save(usersDocument);
-        //  }
-        //  else{
-        //     listofExistingUsers.forEach((existingUser) ->{
-        //         if (existingUser.getUsername().equals(user.getUsername())){
-        //             duplicateUserError.setDuplicateUsername("Current Userame is unavailable");
-        //         }
-        //         if (existingUser.getEmail().equals(user.getEmail())){
-        //             duplicateUserError.setDuplicateEmail("Current Email is already in use");
-        //         }
-        //     }); 
-        //     return ResponseEntity.ok(duplicateUserError); 
-        //  }
-        //  return ResponseEntity.ok(duplicateUserError);
-
     }
-
-    // @RequestMapping("/login")
-    // public String Login(){
-    //     System.out.println("hit login");
-    //     return "logged in!";
-    // }
-
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
@@ -132,6 +81,5 @@ public class LoginController {
         authenticationResponse.setJwt(jwt);
         return ResponseEntity.ok().body(authenticationResponse);
     }
-
     
 }

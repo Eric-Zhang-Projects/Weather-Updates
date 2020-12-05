@@ -3,14 +3,8 @@ import axios from 'axios';
 import { BASE_URL } from "../../constants.json";
 import { getJwt } from '../helpers/jwtHelper';
 import NavbarLoggedIn from '../navbar/NavbarLoggedIn';
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import Accordion from 'react-bootstrap/Accordion';
-import Form from 'react-bootstrap/Form';
-import { Row, Col } from 'react-bootstrap';
 import { createBrowserHistory } from 'history';
-import { useHistory } from "react-router-dom";
 import Tab from 'react-bootstrap/Tab';
 import sun from "../../images/sun_128.png";
 import rain from "../../images/rain_128.png";
@@ -102,6 +96,8 @@ export class WeatherResults extends React.Component {
                 console.log("true!");
                 return <Card.Img variant="top" src={snow} style={{"width": "128px", "height": "128px", "marginTop": "24px"}} />
             } 
+            //default
+            return <Card.Img variant="top" src={sun} style={{"width": "128px", "height": "128px", "marginTop": "24px"}} />
         })
     }
 

@@ -3,28 +3,15 @@ package com.example.backend.Services;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.backend.Documents.CitiesDocument;
-import com.example.backend.Documents.Coordinates;
-import com.example.backend.Documents.CountriesDocument;
-import com.example.backend.Documents.UsersDocument;
-import com.example.backend.Repo.CitiesRepo;
-import com.example.backend.Repo.CountriesRepo;
 import com.example.backend.Repo.UsCitiesRepo;
-import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Requests.GetWeatherForCityRequest;
-import com.example.backend.Responses.DashboardResponse;
-import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.FindCityResponse;
-import com.example.backend.Responses.UpdateUser;
-import com.example.backend.Responses.User;
 import com.example.backend.Responses.WeatherApiResponses.ListData;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Responses.WeatherForecastResponses.DayResponse;
 import com.example.backend.Responses.WeatherForecastResponses.WeatherResponse;
 import com.example.backend.Responses.WeatherForecastResponses.ForecastResponse;
-import com.example.backend.Services.Helpers.ExistingUserCheck;
-import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,28 +34,7 @@ public class WeatherController {
     private String apiKey;
 
     @Autowired
-    private CountriesRepo countriesRepo;
-
-    @Autowired 
-    private CitiesRepo citiesRepo;
-
-    @Autowired
     private UsCitiesRepo usCitiesRepo;
-
-    // @RequestMapping("/countries")
-    // public ResponseEntity<?> GetCountries(){
-    //     System.out.println("hit countries");
-    //     List<CountriesDocument> countries = countriesRepo.findAll();
-    //     return ResponseEntity.ok(countries);
-    // }
-
-    // @RequestMapping("/cities")
-    // public ResponseEntity<?> GetCities(@RequestBody String country){
-    //     System.out.println("Hit cities " + country);
-    //     //Return list of cities
-    //     List<CitiesDocument> cities = citiesRepo.findFirst100ByCountry(country);
-    //     return ResponseEntity.ok(cities);
-    // }
 
     //Find city entered in home.jsx
     @RequestMapping("/findCity")
@@ -96,23 +60,6 @@ public class WeatherController {
             citiesResponse.add(cityResponse);
         });
         return ResponseEntity.ok(citiesResponse);
-        // List<CitiesDocument> cities = citiesRepo.findByName(formatted.trim());
-        // List<FindCityResponse> citiesResponse = new ArrayList<>();
-        // cities.stream().forEach(cityDocument -> {
-        //     FindCityResponse cityResponse = new FindCityResponse();
-        //     cityResponse.setId(cityDocument.getId());
-        //     cityResponse.setName(cityDocument.getName());
-        //     cityResponse.setCountry(cityDocument.getCountry());
-        //     cityResponse.setCoord(cityDocument.getCoord());
-        //     cityResponse.setAdministrativeAreaLevel("");
-        //     citiesResponse.add(cityResponse);
-        // });
-        // if (citiesResponse.size() > 0){
-        //     return ResponseEntity.ok(citiesResponse);
-        // }
-        // else {
-        //     return ResponseEntity.ok(citiesResponse);
-        // }
     }
 
     //Show Weather data for a specific city after searchResults page

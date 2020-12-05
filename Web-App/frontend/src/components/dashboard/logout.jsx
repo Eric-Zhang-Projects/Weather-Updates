@@ -4,10 +4,6 @@ import { Redirect } from "react-router-dom";
 
 export class Logout extends React.Component {
 
-    constructor(props){
-        super(props); 
-    }
-
     logout = () => {
         console.log("local storage with jwt:" + localStorage.getItem("jwt"));
         localStorage.clear("jwt");

@@ -5,10 +5,7 @@ import { getJwt } from '../helpers/jwtHelper';
 import NavbarLoggedIn from '../navbar/NavbarLoggedIn';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { Row, Col } from 'react-bootstrap';
 import { createBrowserHistory } from 'history';
-import AutocompleteSearch from '../autocompleteSearch/autocompleteSearch';
 
 export class Home extends React.Component {
     constructor(props){
@@ -50,7 +47,7 @@ export class Home extends React.Component {
         console.log(this.props.history);
 
         const jwt = getJwt();
-        if (jwt == null){
+        if (jwt === null){
             this.props.history.push('/login');
         }
         console.log('passed in jwt:\n' + jwt);
@@ -63,7 +60,7 @@ export class Home extends React.Component {
              const history = createBrowserHistory();
              const location = history.location;
              try {
-                if (location.state.from == '/login'){
+                if (location.state.from === '/login'){
                     this.setShow(true);
                 }
                  

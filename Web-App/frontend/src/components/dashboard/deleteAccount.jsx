@@ -1,10 +1,8 @@
 import React from "react";
-import Axios from "axios";
+import axios from "axios";
 import { BASE_URL } from "../../constants.json";
-import { getJwt, isLoggedIn } from '../helpers/jwtHelper';
+import { getJwt } from '../helpers/jwtHelper';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
@@ -13,7 +11,7 @@ export class DeleteAccount extends React.Component {
 confirmDelete = () =>{
   console.log("confirmed deletion");
   const jwt = getJwt();
-  Axios.post(`${BASE_URL}/deleteAccount`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
+  axios.post(`${BASE_URL}/deleteAccount`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
   .then(res => {
       console.log(res.data);
       this.props.history.push('/logout');
