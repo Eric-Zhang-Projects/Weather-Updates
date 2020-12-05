@@ -69,7 +69,7 @@ public class DashboardController {
     @RequestMapping("/account")
     public UsersDocument Account(@RequestHeader("Authorization") String jwt){
         String username = jwtUtil.extractUsername(jwt.substring(7));
-        System.out.println("username: " + username);
+        System.out.println("hit account");
         return usersRepo.findByUsername(username);
         
     }
@@ -120,10 +120,10 @@ public class DashboardController {
         return ResponseEntity.ok(usersRepo.deleteByUsername(jwtUtil.extractUsername(jwt.substring(7))));
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/deletecache")
     public ResponseEntity<?> Logout(){
         System.out.println("logging out, deleting cache");
-        cityDataCache.deleteCache();
+         cityDataCache.deleteCache();
         return ResponseEntity.ok("Deleted Cache");
     }
 }

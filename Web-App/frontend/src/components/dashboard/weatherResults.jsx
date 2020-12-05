@@ -101,6 +101,7 @@ export class WeatherResults extends React.Component {
             <NavbarLoggedIn/>
             <h1 style={{"fontFamily": "Open Sans, sans-serif", padding:"20px"}}>Showing Results for {this.state.cityName}, {this.state.cityState}</h1>
             <div className = "weather-buttons">
+            {/* this.props.history.goBack(); */}
                 <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.setUpNotifications}>Set up notifications</Button>
                 <Button style={{"marginLeft": "10px", "width": "250px"}} onClick={()=>this.setAsDefault()}>Set as Dashboard default city</Button>
             </div>

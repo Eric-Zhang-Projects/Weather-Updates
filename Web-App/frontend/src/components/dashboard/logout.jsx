@@ -8,35 +8,23 @@ import { getJwt } from "../helpers/jwtHelper";
 export class Logout extends React.Component {
 
     componentDidMount() {
-        const jwt = getJwt();
-        axios.post(`${BASE_URL}/logout`
-        //{headers: {'Authorization': `Bearer ${jwt}`}}
-        )
+        axios.get(`${BASE_URL}/deletecache`)
         .then (res => {
-            console.log("deleted cache");
+            console.log("deleted cache" + res);
         }).catch(error => {
+            console.log(error);
         });
     }
 
     logout = () => {
-        axios.post(`${BASE_URL}/logout`
-        //{headers: {'Authorization': `Bearer ${jwt}`}}
-        )
-        .then (res => {
-            console.log("deleted cache");
-        }).catch(error => {
-        });
-        console.log("local storage with jwt:" + localStorage.getItem("jwt"));
+        console.log("clearing jwt: " + localStorage.getItem("jwt"));
         localStorage.clear("jwt");
-        console.log("after logout local storage jwt: " + localStorage.getItem("jwt"));
-     //   this.props.history.push("/login");
-    };
+        this.props.history.push('/login');
+    }
 
     render() {
-
-        // return <div>{this.logout()}</div>
-
-        return <Redirect to ={ { pathname: 'login' }}>{this.logout()}</Redirect>
+        //return <Redirect to ={ { pathname: 'login' }}>{this.logout()}</Redirect>
+        return ( <div>{this.logout()} </div> )
     }
 }
 //https://www.npmjs.com/package/reactjs-popup

@@ -12,7 +12,6 @@ export class About extends React.Component {
             To Do:
             <hr/>
             <ul style={{"": "left"}}>
-                <li>FIND OUT HOW TO DELETE CACHE ON LOGOUT</li>
                 <li>Toast/Alert user after setting new default city</li>
                 <li>Email notifications</li>
                 <li> create lambda with cron job</li>
