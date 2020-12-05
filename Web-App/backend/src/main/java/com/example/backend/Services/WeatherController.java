@@ -3,7 +3,9 @@ package com.example.backend.Services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsCitiesRepo;
+import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Requests.GetWeatherForCityRequest;
 import com.example.backend.Responses.FindCityResponse;
@@ -11,6 +13,8 @@ import com.example.backend.Responses.WeatherApiResponses.ListData;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Responses.WeatherForecastResponses.DayResponse;
 import com.example.backend.Responses.WeatherForecastResponses.WeatherResponse;
+import com.example.backend.Services.SecurityConfiguration.JwtUtil;
+import com.example.backend.cache.CityDataCache;
 import com.example.backend.Responses.WeatherForecastResponses.ForecastResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +40,15 @@ public class WeatherController {
 
     @Autowired
     private UsCitiesRepo usCitiesRepo;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UsersRepo usersRepo;
+
+    @Autowired
+    private CityDataCache cityDataCache;
 
     //Find city entered in home.jsx
     @RequestMapping("/findCity")
@@ -67,28 +81,32 @@ public class WeatherController {
     public ResponseEntity<?> GetWeatherForCity(@RequestBody GetWeatherForCityRequest cityWeatherRequest){
         //access api call
         System.out.println("hit weather search");
-        RestTemplate restTemplate = new RestTemplate();
-        String uri = "http://api.openweathermap.org/data/2.5/forecast?";
-        if (cityWeatherRequest.getCityName() != null && cityWeatherRequest.getCityState() != null){
-            uri += "q=" + cityWeatherRequest.getCityName() + "," + cityWeatherRequest.getCityState() + ",us&units=imperial&appid=" + apiKey;
-        }
-        // else if (cityWeatherRequest.getZip() != null){
-        //     uri += "zip=" + weatherSearch.getZip() + "&units=imperial&appid=" + apiKey;
-        // }
-        // else if (weatherSearch.getGeoCoordinates() !=null ){
-        //     uri += weatherSearch.getGeoCoordinates() + "&units=imperial&appid=" + apiKey;
-        // }
-        System.out.println("uri at: " + uri);
-        ResponseEntity<ApiForecastResponse> apiForecastResponse = restTemplate.exchange(
-            uri, HttpMethod.GET, null,
-            new ParameterizedTypeReference<ApiForecastResponse>(){});
+        if (!cityDataCache.containsSearchedCity(cityWeatherRequest.getCityName(), cityWeatherRequest.getCityState())){
+            System.out.println("New API hit for searched city");
+            RestTemplate restTemplate = new RestTemplate();
+            String uri = "http://api.openweathermap.org/data/2.5/forecast?";
+            if (cityWeatherRequest.getCityName() != null && cityWeatherRequest.getCityState() != null){
+                uri += "q=" + cityWeatherRequest.getCityName() + "," + cityWeatherRequest.getCityState() + ",us&units=imperial&appid=" + apiKey;
+            }
+            System.out.println("uri at: " + uri);
+            ResponseEntity<ApiForecastResponse> apiForecastResponse = restTemplate.exchange(
+                uri, HttpMethod.GET, null,
+                new ParameterizedTypeReference<ApiForecastResponse>(){});
 
-        ApiForecastResponse result = apiForecastResponse.getBody();
-        return ResponseEntity.ok(formatWeatherResponse(result));
+            ApiForecastResponse result = apiForecastResponse.getBody();
+            WeatherResponse weatherResponse = new WeatherResponse();
+            weatherResponse.setCityName(cityWeatherRequest.getCityName());
+            weatherResponse.setCityState(cityWeatherRequest.getCityState());
+            ResponseEntity<?> searchedCityData = ResponseEntity.ok(formatWeatherResponse(weatherResponse, result));
+            cityDataCache.updateSearchedCityCache(cityWeatherRequest.getCityName(), cityWeatherRequest.getCityState(), searchedCityData);
+            return searchedCityData;
+        } else {
+            System.out.println("hit cache for searched city");
+            return cityDataCache.getSearchedCityData(cityWeatherRequest.getCityName(), cityWeatherRequest.getCityState());
+        } 
     }
 
-    public WeatherResponse formatWeatherResponse(ApiForecastResponse result){
-        WeatherResponse weatherResponse = new WeatherResponse();
+    public WeatherResponse formatWeatherResponse(WeatherResponse weatherResponse, ApiForecastResponse result){
         weatherResponse.setId(result.getCity().getId());
         int startTime = result.getList().get(0).getDt();
         int endDayTime = startTime + (3600 * 3 * 8);
@@ -148,6 +166,17 @@ public class WeatherController {
             max = curr;
         }
         return max;
+    }
+
+    @RequestMapping("/setDefaultCity")
+    public ResponseEntity<?> SetDefaultCity(@RequestHeader("Authorization") String jwt, @RequestBody GetWeatherForCityRequest cityWeatherRequest){
+        String username = jwtUtil.extractUsername(jwt.substring(7));
+        UsersDocument currentInfo = usersRepo.findByUsername(username);
+        currentInfo.setCity(cityWeatherRequest.getCityName());
+        currentInfo.setState(cityWeatherRequest.getCityState());
+        usersRepo.save(currentInfo);
+        cityDataCache.setDefaultCity(cityDataCache.getSearchedCityData(cityWeatherRequest.getCityName(), cityWeatherRequest.getCityState()));
+        return ResponseEntity.ok("Set as default");
     }
     
 }

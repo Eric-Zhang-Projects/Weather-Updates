@@ -15,7 +15,7 @@ export class Account extends React.Component {
             email: '',
             name: '',
             city: 'N/A',
-            zip: 'N/A',
+            state: 'N/A',
         }
     }
 
@@ -37,12 +37,12 @@ export class Account extends React.Component {
                 email: result.data.email,
                 name: result.data.name,
                 city: result.data.city,
-                zip: result.data.zip
+                state: result.data.state
             });
-            if (result.data.city === "" || result.data.zip ===""){
+            if (result.data.city === "" || result.data.state ===""){
                 this.setState({
                     city: 'N/A',
-                    zip: 'N/A'
+                    state: 'N/A'
                 })
             }
         }).catch(err =>{
@@ -96,7 +96,7 @@ export class Account extends React.Component {
                 City: {this.state.city}
                 </div>
                 <div>
-                Zip: {this.state.zip}
+                 State: {this.state.state}
                 </div>
 
                 <hr/>

@@ -1,10 +1,31 @@
+import axios from "axios";
 import React from "react";
+import { BASE_URL } from "../../constants.json";
 import { Redirect } from "react-router-dom";
+import { getJwt } from "../helpers/jwtHelper";
 //import Popup from 'react-popup';
 
 export class Logout extends React.Component {
 
+    componentDidMount() {
+        const jwt = getJwt();
+        axios.post(`${BASE_URL}/logout`
+        //{headers: {'Authorization': `Bearer ${jwt}`}}
+        )
+        .then (res => {
+            console.log("deleted cache");
+        }).catch(error => {
+        });
+    }
+
     logout = () => {
+        axios.post(`${BASE_URL}/logout`
+        //{headers: {'Authorization': `Bearer ${jwt}`}}
+        )
+        .then (res => {
+            console.log("deleted cache");
+        }).catch(error => {
+        });
         console.log("local storage with jwt:" + localStorage.getItem("jwt"));
         localStorage.clear("jwt");
         console.log("after logout local storage jwt: " + localStorage.getItem("jwt"));

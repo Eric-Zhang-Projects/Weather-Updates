@@ -1,13 +1,16 @@
 package com.example.backend.Services;
 
+import java.util.Objects;
+
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
-import com.example.backend.Responses.DashboardResponse;
+import com.example.backend.Requests.GetWeatherForCityRequest;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
+import com.example.backend.cache.CityDataCache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +36,35 @@ public class DashboardController {
     @Autowired
     private ExistingUserCheck existingUserCheck;
 
+    @Autowired
+    private WeatherController weatherController;
+
+    @Autowired
+    private CityDataCache cityDataCache;
+
     @RequestMapping("/dashboard")
-    public ResponseEntity<?> Dashboard(){
+    public ResponseEntity<?> Dashboard(@RequestHeader("Authorization") String jwt){
         //Dashboard will load user's city weather info, or if n/a some random city info
         System.out.println("hit dashboard");
-        DashboardResponse dashboardResponse = new DashboardResponse();
-        dashboardResponse.setGreeting("hey bro whats good");
-        ApiForecastResponse result = new ApiForecastResponse();
-        return ResponseEntity.ok(result);
+        if (Objects.isNull(cityDataCache.getDefaultCity())){
+            System.out.println("returning new default city");
+            String username = jwtUtil.extractUsername(jwt.substring(7));
+            UsersDocument usersDocument = usersRepo.findByUsername(username);
+            if (usersDocument.getCity().equals("") || usersDocument.getState().equals("")){
+                usersDocument.setCity("New York");
+                usersDocument.setState("NY");
+            }
+            GetWeatherForCityRequest cityWeatherRequest = new GetWeatherForCityRequest();
+            cityWeatherRequest.setCityName(usersDocument.getCity());
+            cityWeatherRequest.setCityState(usersDocument.getState());
+            ResponseEntity<?> defCity = weatherController.GetWeatherForCity(cityWeatherRequest);
+            cityDataCache.setDefaultCity(defCity);
+            return defCity;
+        } else {
+            System.out.println("returning default city");
+            return cityDataCache.getDefaultCity();
+        }
     }
-
 
     @RequestMapping("/account")
     public UsersDocument Account(@RequestHeader("Authorization") String jwt){
@@ -53,9 +75,8 @@ public class DashboardController {
     }
 
     @RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
-    public ResponseEntity<?> UpdateInfo(@RequestHeader("Authorization") String jwt, @RequestBody UpdateUser user){
+    public ResponseEntity<?> UpdateInfo(@RequestBody UpdateUser user){
         System.out.println("hit update info");
-       // String username = jwtUtil.extractUsername(jwt.substring(7));
        //Check by old username 
         UsersDocument currentInfo = usersRepo.findByUsername(user.getOldUsername());
         if (!user.getNewName().equals("")){
@@ -97,5 +118,12 @@ public class DashboardController {
     public ResponseEntity<?> DeleteUser(@RequestHeader("Authorization") String jwt){
         System.out.println("hit delete user");
         return ResponseEntity.ok(usersRepo.deleteByUsername(jwtUtil.extractUsername(jwt.substring(7))));
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity<?> Logout(){
+        System.out.println("logging out, deleting cache");
+        cityDataCache.deleteCache();
+        return ResponseEntity.ok("Deleted Cache");
     }
 }

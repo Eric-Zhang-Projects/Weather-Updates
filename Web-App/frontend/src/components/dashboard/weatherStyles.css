@@ -1,7 +1,9 @@
-.weather-container-base {
+.weather-buttons {
 
-
-
+    display: flex;
+    font-family: "Open Sans", sans-serif;
+    justify-content: center;
+    align-items: center;
 }
 
 .weather-container-main{

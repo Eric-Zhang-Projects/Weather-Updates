@@ -17,6 +17,8 @@ public class WeatherResponse {
 
     //Used to store in db to query weather faster for repeated searches
     private Integer id;
+    private String cityName;
+    private String cityState;
     
     private List<DayResponse> dayResponse = new ArrayList<>();
     private List<ForecastResponse> forecastResponse = new ArrayList<>();

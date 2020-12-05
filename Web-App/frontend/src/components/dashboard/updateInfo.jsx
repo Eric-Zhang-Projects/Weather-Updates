@@ -21,7 +21,7 @@ export class UpdateInfo extends React.Component {
             newPassword: '',
             newEmail: '',
             newName: '',
-            enterAllFields: 'Please only input the information you would like to change, leaving the other fields empty',
+            enterAllFields: 'Please only input the information you would like to change, leaving the other fields empty.',
             allFieldsTextColor: 'black',
             successAlert: null,
             successMessage: '',
@@ -244,12 +244,13 @@ export class UpdateInfo extends React.Component {
             {/* </div> */}
                 </div>
 
-                <div class="d-flex justify-content-around" style={{width: "100%"}}>
+                <div className="d-flex justify-content-around" style={{width: "100%"}}>
               <Button onClick={() => this.props.history.push('/account')} variant="outline-danger">Cancel</Button>
               <Button type="button" className="btn" onClick={this.handleConfirmChanges} variant="outline-success">Submit Changes</Button>  
             </div>
-                    {this.state.successAlert}
-                    </div>
+            <p style={{"paddingTop": "20px"}}>*If you would like to change the default city saved to this account, please go to 'Dashboard', then search, find, and save a new location.</p>
+            {this.state.successAlert}
+            </div>
 
             
             )

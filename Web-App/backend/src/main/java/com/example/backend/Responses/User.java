@@ -18,7 +18,7 @@ public class User {
     private String password;
     private String name;
     private String city;
-    private String zip;
+    private String state;
     private String email;
 
 }
