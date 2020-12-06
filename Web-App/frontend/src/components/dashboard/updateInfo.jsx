@@ -7,7 +7,6 @@ import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
 import { createBrowserHistory } from 'history';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
-
 export class UpdateInfo extends React.Component {
 
     constructor(props){
@@ -29,8 +28,6 @@ export class UpdateInfo extends React.Component {
             usernameError: 'Username',
             emailError: 'Email',
             title: ''
-        
-
         }
 
         this.handleSubmitChanges = this.handleSubmitChanges.bind(this);

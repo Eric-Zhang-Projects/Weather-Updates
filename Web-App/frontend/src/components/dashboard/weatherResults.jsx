@@ -26,6 +26,7 @@ export class WeatherResults extends React.Component {
             cityState: "",
             dailyForecast: [],
             weeklyForecast: [],
+            clickedDefault: false
         }
     }
 
@@ -91,9 +92,20 @@ export class WeatherResults extends React.Component {
         { headers: {'Authorization': `Bearer ${jwt}`}})
         .then( result => {
             console.log("Set as default city");
+            this.setState({
+                clickedDefault: true
+            })
         }).catch(err => {
           console.log(err.messasge);
       });
+    }
+
+    defaultButton = () =>{
+        if (this.state.clickedDefault){
+            return (<Button style={{"marginLeft": "10px", "width": "250px", "backgroundColor":"green"}}>New default city set!</Button>)
+        } else {
+            return (<Button style={{"marginLeft": "10px", "width": "250px"}} onClick={()=>this.setAsDefault()}>Set as Dashboard default city</Button>)
+        }
     }
 
     render () {
@@ -102,8 +114,8 @@ export class WeatherResults extends React.Component {
             <h1 style={{"fontFamily": "Open Sans, sans-serif", padding:"20px"}}>Showing Results for {this.state.cityName}, {this.state.cityState}</h1>
             <div className = "weather-buttons">
             {/* this.props.history.goBack(); */}
-                <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.setUpNotifications}>Set up notifications</Button>
-                <Button style={{"marginLeft": "10px", "width": "250px"}} onClick={()=>this.setAsDefault()}>Set as Dashboard default city</Button>
+                <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.props.history.push("/notifications",{ cityName: this.state.cityName, cityState: this.state.cityState})}>Set up notifications</Button>
+                {this.defaultButton()}
             </div>
             <div className = "weather-container-main">
             <div className = "weather-tabs">

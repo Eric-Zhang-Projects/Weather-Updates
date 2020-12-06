@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Login, Register, About } from "./components/login";
-import { Home, Account, UpdateInfo, DeleteAccount, Logout, Unauthorized, SearchResults, WeatherResults } from "./components/dashboard";
+import { Home, Account, UpdateInfo, DeleteAccount, Logout, Unauthorized, SearchResults, WeatherResults, Notifications } from "./components/dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,6 +18,7 @@ function App() {
           <ProtectedRoute path = '/dashboard' component = {Home}/>
           <ProtectedRoute path = '/searchResults' component = {SearchResults}/>
           <ProtectedRoute path = '/weatherResults' component = {WeatherResults}/>
+          <ProtectedRoute path = '/notifications' component = {Notifications}/>
           {/* <Route path = '/account' render ={(props) => ( <Account {...props} />)}/> */}
           <ProtectedRoute path = '/account' component = {Account}/>
           <ProtectedRoute path = '/updateInfo' component = {UpdateInfo}/>

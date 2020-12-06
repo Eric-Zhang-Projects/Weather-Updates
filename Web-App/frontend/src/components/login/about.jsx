@@ -12,8 +12,7 @@ export class About extends React.Component {
             To Do:
             <hr/>
             <ul style={{"": "left"}}>
-                <li>Toast/Alert user after setting new default city</li>
-                <li>Email notifications</li>
+                <li>Email notifications, finish confirmation message and api</li>
                 <li> create lambda with cron job</li>
                 <hr/>
                 <li> forgot password</li>

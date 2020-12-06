@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -178,5 +179,18 @@ public class WeatherController {
         cityDataCache.setDefaultCity(cityDataCache.getSearchedCityData(cityWeatherRequest.getCityName(), cityWeatherRequest.getCityState()));
         return ResponseEntity.ok("Set as default");
     }
-    
+
+    @RequestMapping("/getEmail")
+    public ResponseEntity<?> GetEmail(@RequestHeader("Authorization") String jwt){
+        System.out.println("Get email for notifications");
+        String username = jwtUtil.extractUsername(jwt.substring(7));
+        String email = usersRepo.findByUsername(username).getEmail();
+        return ResponseEntity.ok(email);
+    }
+
+    @RequestMapping(value = "/setNotifications", method = RequestMethod.POST)
+    public ResponseEntity<?> SetNotifications(@RequestHeader("Authorization") String jwt){
+        System.out.println("Set up notifications");
+        return ResponseEntity.ok("hi");
+    }    
 }

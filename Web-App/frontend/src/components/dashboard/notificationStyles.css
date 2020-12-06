@@ -1,0 +1,48 @@
+.notifications-base{
+    font-family: "Open Sans", sans-serif;
+}
+
+.list {
+    text-align: left;
+    width: 50%
+}
+
+.elements{
+    margin-left:10px
+}
+
+.notifications-options-base{
+        height: 65vh;
+        width: 100%;
+        font-family: "Open Sans", sans-serif;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+}
+
+.notifications-options-selections{
+    width: 95%;
+    border: 1px solid;
+    border-color: #D2D1D1;
+    border-radius: 7px;
+    padding: 4%;
+    /* margin-left: 2px; */
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 90%;
+    justify-content: left;
+    align-items: center;
+    display: flex;
+}  
+
+.notifications-content{
+    width: 100%;
+    /* margin-left: 2px; */
+    height: 90%;
+
+} 
+
+.notifications-cards-list{
+    border-color:black;
+    width:100%;
+}
