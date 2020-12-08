@@ -1,4 +1,5 @@
-import "./accountStyles.scss";
+import "./dashboardStyles.scss";
+import "./accountStyles.css";
 import "./weatherStyles.css";
 import "./notificationStyles.css";
 //import 'bootstrap/dist/css/bootstrap.min.css';

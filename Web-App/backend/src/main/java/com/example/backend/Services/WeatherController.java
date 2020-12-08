@@ -8,6 +8,7 @@ import com.example.backend.Repo.UsCitiesRepo;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.FindCityRequest;
 import com.example.backend.Requests.GetWeatherForCityRequest;
+import com.example.backend.Requests.NotificationRequest;
 import com.example.backend.Responses.FindCityResponse;
 import com.example.backend.Responses.WeatherApiResponses.ListData;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
@@ -189,8 +190,8 @@ public class WeatherController {
     }
 
     @RequestMapping(value = "/setNotifications", method = RequestMethod.POST)
-    public ResponseEntity<?> SetNotifications(@RequestHeader("Authorization") String jwt){
-        System.out.println("Set up notifications");
+    public ResponseEntity<?> SetNotifications(@RequestHeader("Authorization") String jwt, @RequestBody NotificationRequest conditions){
+        System.out.println("Set up notifications for: " + conditions.getConditions());
         return ResponseEntity.ok("hi");
     }    
 }

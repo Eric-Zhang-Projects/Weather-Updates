@@ -4,6 +4,7 @@ import { BASE_URL } from "../../constants.json";
 import { getJwt } from '../helpers/jwtHelper';
 import Button from 'react-bootstrap/Button';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
+import Card from 'react-bootstrap/Card';
 
 export class Account extends React.Component {
 
@@ -68,41 +69,44 @@ export class Account extends React.Component {
 
     handleDeleteAccount = (event) =>{
         event.preventDefault();
-
         this.props.history.push('/deleteAccount');
         //show pop up alert and give user yes or no option then axios away
-
     }
 
     render(){
         return (
-        <div className = "base-container">
+        <div>
          <NavbarLoggedIn/>
-            <div className = "content">
-                <div>
+         <div className = "account-content-base">
+            <div className = "account-content">
+            <Card className="text-center" style={{"width": "30%"}}>
+                <Card.Header>Current Info:</Card.Header>
+                <Card.Body>
+                    <Card.Text>
+                <p>
                 Name: {this.state.name}
-                </div>
-                <div>
-                Username: {this.state.username}
-                </div>
-                <div>
-                Password: {this.state.password}
-                </div>
-                <div>
+                </p>
+                <p>
                 Email: {this.state.email}
-                </div>
+                </p>
+                <p>
+                Username: {this.state.username}
+                </p>
+                <p>
+                Password: {this.state.password}
+                </p>
                 <hr/>
-                <div>
-                City: {this.state.city}
+                <p>
+                Default City: {this.state.city}, {this.state.state}
+                </p>
+                    </Card.Text>
+                    </Card.Body>
+                    <Card.Footer className="text-muted">
+                    <Button type="button" style={{"marginRight": "10px"}} onClick={this.handleUpdateInfo}>Update Account Info</Button>  
+                    <Button type="button" style={{"marginLeft": "10px"}} onClick={this.handleDeleteAccount} variant="outline-danger">Delete Account</Button>  
+                    </Card.Footer>
+                </Card>
                 </div>
-                <div>
-                 State: {this.state.state}
-                </div>
-
-                <hr/>
-                <Button type="button" className="btn" onClick={this.handleUpdateInfo}>Update Account Info</Button>  
-                <hr/>     
-                <Button type="button" className="btn" onClick={this.handleDeleteAccount} variant="outline-danger">Delete Account</Button>                 
                 </div>
         </div>
         )

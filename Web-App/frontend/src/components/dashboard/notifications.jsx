@@ -29,8 +29,11 @@ export class Notifications extends React.Component {
         cloudyClicked:false,
         showSubmitError: false,
         showConfirmation: null,
-        conditionArray: []
+        conditionArray: [],
+        conditionString: '',
+        //displayingPopUp: null
     }
+
 
     componentDidMount = () => {
         const jwt = getJwt();
@@ -225,8 +228,8 @@ export class Notifications extends React.Component {
             console.log("show popup for confirm notifications");
             this.setState({
                 showSubmitError: false,
-                showConfirmation: this.showConfirmationPopup()
             })
+            this.confirmationPopupData();
         } else {
             this.setState({
                 showSubmitError: true
@@ -240,26 +243,77 @@ export class Notifications extends React.Component {
         }
     }
 
-    showConfirmationPopup = () => {
+    updateConditionArray = (condition)=>{
+        this.setState(state =>{
+            const conditionArray = state.conditionArray.concat(condition);
+            var conditionString = state.conditionString;
+            if (conditionString ===''){
+                conditionString = condition;
+            } else {
+                conditionString = state.conditionString + ", " + condition;
+            }
+            return {
+                conditionArray,
+                conditionString
+            };
+        });
+    }
+
+    confirmationPopupData = () => {
+        this.setState({
+            conditionArray: [],
+            conditionString: ''
+        })
+        if (this.state.snowClicked){
+            this.updateConditionArray("snow");
+        }
+        if (this.state.rainClicked){
+            this.updateConditionArray("rain");
+        }
+        if (this.state.lightningClicked){
+            this.updateConditionArray("lightning");
+        }
+        if (this.state.windyClicked){
+            this.updateConditionArray("wind");
+        }
+        if (this.state.sunnyClicked){
+            this.updateConditionArray("clear skies");
+        }
+        if (this.state.cloudyClicked){
+            this.updateConditionArray("clouds");
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.conditionString!==this.state.conditionString){
+            console.log("state change");
+            this.setState({showConfirmation: this.showConfirmationPopUp()});
+        }
+    }
+
+    showConfirmationPopUp = () =>{
         return <SweetAlert
         success
         showCancel
-        confirmBtnText="Yes, delete my account"
+        confirmBtnText="Yes, set up notifications"
         confirmBtnBsStyle="danger"
-        title="Are you sure?"
+        title="Set up notifications?"
         onConfirm={() => this.confirmNotifications()}
         onCancel={() => this.setState({showConfirmation: false})}
         focusCancelBtn
       >
-    This will confirm that you will recieve notifications for if:
+    This will confirm that you will recieve notifications for if weather suddenly has:
+    <p>{this.state.conditionString}</p>
     </SweetAlert>
     }
 
     confirmNotifications =() =>{
-        console.log("call api to send notifications");
+        const jwt = getJwt();
+        console.log("call api to send notifications for " + this.state.conditionString);
         axios.post(`${BASE_URL}/setNotifications`, {
-            conditions: this.state.conditionArray,
-        }).then (res => {
+            conditions: this.state.conditionString },
+            {headers: {'Authorization': `Bearer ${jwt}`}}
+        ).then (res => {
             console.log("confirmed notifications");
             this.props.history.push('/dashboard')
         }).catch(error =>{
@@ -303,6 +357,7 @@ export class Notifications extends React.Component {
                 </div>
                 <div style={{"paddingTop": "50px"}}><Button style={{"fontSize":"20px"}} onClick={()=>{this.onSubmit()}}>Set up notifications!</Button></div>
                 {this.showSubmitError()}
+                {this.state.showConfirmation}
                 </div>
                 </div>
             </div>
