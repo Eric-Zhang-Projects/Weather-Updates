@@ -26,7 +26,8 @@ export class WeatherResults extends React.Component {
             cityState: "",
             dailyForecast: [],
             weeklyForecast: [],
-            clickedDefault: false
+            clickedDefault: false,
+            setUpNotificationSuccess: false
         }
     }
 
@@ -36,7 +37,8 @@ export class WeatherResults extends React.Component {
         const location = history.location;
         this.setState({
             cityName: location.state.cityName,
-            cityState: location.state.cityState
+            cityState: location.state.cityState,
+            setUpNotificationSuccess: location.state.setUpNotificationSuccess
         })
         axios.post(`${BASE_URL}/getWeatherForCity`, 
         {cityName: location.state.cityName,
@@ -108,13 +110,24 @@ export class WeatherResults extends React.Component {
         }
     }
 
+    notificationButton = () => {
+        if (this.state.setUpNotificationSuccess){
+            return <Button style={{"marinRight": "10px", "width": "250px", "backgroundColor":"green"}} onClick={()=>this.props.history.push("/notifications",{ cityName: this.state.cityName, cityState: this.state.cityState})}>Notifications just set!</Button>
+
+        } else {
+            return <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.props.history.push("/notifications",{ cityName: this.state.cityName, cityState: this.state.cityState})}>Set up notifications</Button>
+
+        }
+    }
+
     render () {
         return <div className = "weather-container-base">
             <NavbarLoggedIn/>
             <h1 style={{"fontFamily": "Open Sans, sans-serif", padding:"20px"}}>Showing Results for {this.state.cityName}, {this.state.cityState}</h1>
             <div className = "weather-buttons">
             {/* this.props.history.goBack(); */}
-                <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.props.history.push("/notifications",{ cityName: this.state.cityName, cityState: this.state.cityState})}>Set up notifications</Button>
+            {/* <Button style={{"marinRight": "10px", "width": "250px"}} onClick={()=>this.props.history.push("/notifications",{ cityName: this.state.cityName, cityState: this.state.cityState})}>Set up notifications</Button> */}
+                {this.notificationButton()}
                 {this.defaultButton()}
             </div>
             <div className = "weather-container-main">

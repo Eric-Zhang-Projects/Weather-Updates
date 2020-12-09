@@ -250,7 +250,7 @@ export class Notifications extends React.Component {
             if (conditionString ===''){
                 conditionString = condition;
             } else {
-                conditionString = state.conditionString + ", " + condition;
+                conditionString = state.conditionString + "," + condition;
             }
             return {
                 conditionArray,
@@ -311,11 +311,17 @@ export class Notifications extends React.Component {
         const jwt = getJwt();
         console.log("call api to send notifications for " + this.state.conditionString);
         axios.post(`${BASE_URL}/setNotifications`, {
-            conditions: this.state.conditionString },
+            conditions: this.state.conditionString,
+            cityName: this.state.cityName,
+            cityState: this.state.cityState },
             {headers: {'Authorization': `Bearer ${jwt}`}}
         ).then (res => {
             console.log("confirmed notifications");
-            this.props.history.push('/dashboard')
+            this.props.history.push(
+                '/weatherResults', {
+                cityName: this.state.cityName,
+                cityState: this.state.cityState,
+                setUpNotificationSuccess: true});
         }).catch(error =>{
             alert("Failed to sign up for notifications");
             this.props.history.push('/notifications')
@@ -325,14 +331,14 @@ export class Notifications extends React.Component {
     render() {
         return (<div className = "notifications-base">
             <NavbarLoggedIn/>
-            <Breadcrumb style={{"color": "white"}}>
+            {/* <Breadcrumb style={{"color": "white"}}>
                 <Breadcrumb.Item href="#">Dashboard</Breadcrumb.Item>
                 <Breadcrumb.Item href="#">
                     Search Results
                 </Breadcrumb.Item>
                 <Breadcrumb.Item href="#">Weather</Breadcrumb.Item>
                 <Breadcrumb.Item active>Set Up Notifications</Breadcrumb.Item>
-            </Breadcrumb>
+            </Breadcrumb> */}
             <h1>Setting up notifications for {this.state.cityName}, {this.state.cityState}</h1>
             <div>
                 <ol className="list">

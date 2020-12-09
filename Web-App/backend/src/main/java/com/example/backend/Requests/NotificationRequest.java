@@ -10,6 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationRequest {
+    private String cityName;
+    private String cityState;
     private String conditions;
     
 }

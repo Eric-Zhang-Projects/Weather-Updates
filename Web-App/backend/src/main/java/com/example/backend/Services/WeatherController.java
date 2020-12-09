@@ -1,6 +1,7 @@
 package com.example.backend.Services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.example.backend.Documents.UsersDocument;
@@ -192,6 +193,12 @@ public class WeatherController {
     @RequestMapping(value = "/setNotifications", method = RequestMethod.POST)
     public ResponseEntity<?> SetNotifications(@RequestHeader("Authorization") String jwt, @RequestBody NotificationRequest conditions){
         System.out.println("Set up notifications for: " + conditions.getConditions());
+        String username = jwtUtil.extractUsername(jwt.substring(7));
+        UsersDocument usersDocument = usersRepo.findByUsername(username);
+        usersDocument.setNotificationConditions(conditions.getConditions());
+        usersDocument.setNotificationCity(conditions.getCityName());
+        usersDocument.setNotificationState(conditions.getCityState());
+        usersRepo.save(usersDocument);
         return ResponseEntity.ok("hi");
     }    
 }
