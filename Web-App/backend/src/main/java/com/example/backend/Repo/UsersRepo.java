@@ -21,5 +21,7 @@ public interface UsersRepo extends MongoRepository<UsersDocument, String>{
     public UsersDocument findByEmail(String email);
 
     public UsersDocument deleteByUsername(String username);
+
+    //public UsersDocument findByUsernameAndSendNotifications(String username, Boolean sendNotifications);
     
 }

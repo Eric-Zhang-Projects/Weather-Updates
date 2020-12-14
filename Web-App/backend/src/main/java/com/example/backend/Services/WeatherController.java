@@ -15,6 +15,7 @@ import com.example.backend.Responses.WeatherApiResponses.ListData;
 import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Responses.WeatherForecastResponses.DayResponse;
 import com.example.backend.Responses.WeatherForecastResponses.WeatherResponse;
+import com.example.backend.Services.Helpers.EmailService;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.cache.CityDataCache;
 import com.example.backend.Responses.WeatherForecastResponses.ForecastResponse;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +54,9 @@ public class WeatherController {
 
     @Autowired
     private CityDataCache cityDataCache;
+
+    @Autowired
+    private EmailService emailSerivce;
 
     //Find city entered in home.jsx
     @RequestMapping("/findCity")
@@ -195,10 +200,38 @@ public class WeatherController {
         System.out.println("Set up notifications for: " + conditions.getConditions());
         String username = jwtUtil.extractUsername(jwt.substring(7));
         UsersDocument usersDocument = usersRepo.findByUsername(username);
-        usersDocument.setNotificationConditions(conditions.getConditions());
-        usersDocument.setNotificationCity(conditions.getCityName());
-        usersDocument.setNotificationState(conditions.getCityState());
+        try{
+            emailSerivce.sendMail(usersDocument.getEmail(), conditions.getCityName(), conditions.getCityState(), conditions.getConditions());
+            usersDocument.setSendNotifications("true");
+            usersDocument.setNotificationConditions(conditions.getConditions());
+            usersDocument.setNotificationCity(conditions.getCityName());
+            usersDocument.setNotificationState(conditions.getCityState());
+            usersRepo.save(usersDocument);
+            return ResponseEntity.ok("success");
+        } catch (Exception e){
+            String simpleError = "There was an error setting up email notifications. Please check to ensure that you have the correct email in your account info page.";
+            if (e.getMessage().contains("Invalid Address")){
+                simpleError = "The provided email address was invalid. Please check to ensure that you have the correct email in your account info page.";
+            }
+            return ResponseEntity.ok(simpleError);
+        }
+    }
+
+    public String formatConditions(){
+        return "";
+    }
+
+    @RequestMapping(value = "/cancelNotifications", method = RequestMethod.POST)
+    public ResponseEntity<?> CancelNotifications(@RequestHeader("Authorization") String jwt){
+        System.out.println("Cancel notifications");
+        String username = jwtUtil.extractUsername(jwt.substring(7));
+        UsersDocument usersDocument = usersRepo.findByUsername(username);
+        usersDocument.setSendNotifications("false");
+        usersDocument.setNotificationConditions("");
+        usersDocument.setNotificationCity("");
+        usersDocument.setNotificationState("");
         usersRepo.save(usersDocument);
-        return ResponseEntity.ok("hi");
-    }    
+        return ResponseEntity.ok("Canceled notifications");
+    }
+    
 }

@@ -31,6 +31,7 @@ export class Notifications extends React.Component {
         showConfirmation: null,
         conditionArray: [],
         conditionString: '',
+        showEmailFailure: null
         //displayingPopUp: null
     }
 
@@ -307,6 +308,21 @@ export class Notifications extends React.Component {
     </SweetAlert>
     }
 
+    showEmailFailurePopup = (error) =>{
+        return <SweetAlert
+        danger
+        //showCancel
+        confirmBtnText="Ok"
+        confirmBtnBsStyle="danger"
+        title="Oops!"
+        onConfirm={() => this.setState({showEmailFailure: null})}
+        //onCancel={() => this.setState({showConfirmation: false})}
+        focusCancelBtn
+      >
+    {error}
+    </SweetAlert>
+    }
+
     confirmNotifications =() =>{
         const jwt = getJwt();
         console.log("call api to send notifications for " + this.state.conditionString);
@@ -316,15 +332,25 @@ export class Notifications extends React.Component {
             cityState: this.state.cityState },
             {headers: {'Authorization': `Bearer ${jwt}`}}
         ).then (res => {
-            console.log("confirmed notifications");
-            this.props.history.push(
-                '/weatherResults', {
-                cityName: this.state.cityName,
-                cityState: this.state.cityState,
-                setUpNotificationSuccess: true});
+            console.log("confirmed notifications with status: " + res.data);
+            if (res.data === "success"){
+                this.props.history.push(
+                    '/weatherResults', {
+                    cityName: this.state.cityName,
+                    cityState: this.state.cityState,
+                    setUpNotificationSuccess: true});
+            } else {
+                this.setState({
+                    showConfirmation: false,
+                    showEmailFailure: this.showEmailFailurePopup(res.data)})
+            }
+
         }).catch(error =>{
-            alert("Failed to sign up for notifications");
-            this.props.history.push('/notifications')
+            this.setState({
+                showConfirmation: false,
+                showEmailFailure: this.showEmailFailurePopup("Error")})
+            //alert("Failed to sign up for notifications");
+            //this.props.history.push('/notifications')
         });
     }
 
@@ -368,6 +394,7 @@ export class Notifications extends React.Component {
                 </div>
             </div>
             <div>{this.state.showConfirmation}</div>
+            <div>{this.state.showEmailFailure}</div>
             </div>
         )
     }

@@ -167,7 +167,7 @@ export class UpdateInfo extends React.Component {
                 else{
                     this.setState({
                         successMessage: "Your credentials have been updated!",
-                        redirectTo: '/dashboard',
+                        redirectTo: '/account',
                     });
                     this.setState({successAlert: this.showSuccessAlert()});
                 }

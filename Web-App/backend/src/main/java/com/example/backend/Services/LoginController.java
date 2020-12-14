@@ -46,6 +46,11 @@ public class LoginController {
         usersDocument.setPassword(user.getPassword());
         usersDocument.setCity("");
         usersDocument.setState("");
+        usersDocument.setSendNotifications("");
+        usersDocument.setNotificationCity("");
+        usersDocument.setNotificationState("");
+        usersDocument.setNotificationConditions("");
+
         DuplicateUserError duplicateUserError = existingUserCheck.findDuplicateUsers(usersDocument.getUsername(), usersDocument.getEmail());
         if (duplicateUserError.getDuplicateEmail()==null && duplicateUserError.getDuplicateUsername()==null){
             usersRepo.save(usersDocument);

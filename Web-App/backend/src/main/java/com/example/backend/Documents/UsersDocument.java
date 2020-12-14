@@ -23,6 +23,7 @@ public class UsersDocument {
     private String name;
     private String city;
     private String state;
+    private String sendNotifications;
     private String email;
     private String notificationCity;
     private String notificationState;

@@ -17,6 +17,10 @@ export class Account extends React.Component {
             name: '',
             city: 'N/A',
             state: 'N/A',
+            sendNotifications: '',
+            notificationCity: '',
+            notificationState: '',
+            notificationConditions: ''
         }
     }
 
@@ -38,12 +42,23 @@ export class Account extends React.Component {
                 email: result.data.email,
                 name: result.data.name,
                 city: result.data.city,
-                state: result.data.state
+                state: result.data.state,
+                sendNotifications: result.data.sendNotifications,
+                notificationCity: result.data.notificationCity,
+                notificationState: result.data.notificationState,
+                notificationConditions: result.data.notificationConditions
             });
             if (result.data.city === "" || result.data.state ===""){
                 this.setState({
                     city: 'N/A',
                     state: 'N/A'
+                })
+            }
+            if (!result.data.sendNotifications){
+                this.setState({
+                    notificationCity: 'N/A',
+                    notificationState: 'N/A',
+                    notificationConditions: 'N/A'
                 })
             }
         }).catch(err =>{
@@ -73,6 +88,46 @@ export class Account extends React.Component {
         //show pop up alert and give user yes or no option then axios away
     }
 
+    cancelNotifications = () =>{
+        const jwt = getJwt();
+        axios.post(`${BASE_URL}/cancelNotifications`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
+        .then(res => {
+            console.log(res.data);
+            window.location.reload();
+        }).catch( err => {
+            console.log(err);
+        });
+    }
+
+    showingNotificationInfo = () =>{
+        if(this.state.sendNotifications === "true"){
+            return (
+                <div>
+                <p>Receiving Notifications: Yes</p>
+                <p>Notification City: {this.state.notificationCity}, {this.state.notificationState}</p>
+                <p>Notification Conditions: {this.state.notificationConditions}</p>
+                <Button variant="outline-danger" onClick={()=>this.cancelNotifications()}>Cancel Notifications</Button>
+                </div>
+            )
+        } else {
+            return (
+                <p>Receiving Notifications: No</p>
+            )
+        }
+    }
+
+    showingDefaultCityInfo = () => {
+        if(this.state.city === "N/A" || this.state.state === "N/A"){
+            return (
+                <p>Default City: Not Specified</p>
+            )
+        } else {
+            return (
+                <p>Default City: {this.state.city}, {this.state.state}</p>
+            )
+        }
+    }
+
     render(){
         return (
         <div>
@@ -83,22 +138,14 @@ export class Account extends React.Component {
                 <Card.Header>Current Info:</Card.Header>
                 <Card.Body>
                     <Card.Text>
-                <p>
-                Name: {this.state.name}
-                </p>
-                <p>
-                Email: {this.state.email}
-                </p>
-                <p>
-                Username: {this.state.username}
-                </p>
-                <p>
-                Password: {this.state.password}
-                </p>
+                <p> Name: {this.state.name}</p>
+                <p>Email: {this.state.email}</p>
+                <p>Username: {this.state.username}</p>
+                <p>Password: {this.state.password}</p>
                 <hr/>
-                <p>
-                Default City: {this.state.city}, {this.state.state}
-                </p>
+                {this.showingNotificationInfo()}
+                <hr/>
+                {this.showingDefaultCityInfo()}
                     </Card.Text>
                     </Card.Body>
                     <Card.Footer className="text-muted">
