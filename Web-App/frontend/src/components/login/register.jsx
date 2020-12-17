@@ -165,7 +165,7 @@ export class Register extends React.Component {
                     <img src = {loginLogo} alt="register logo"/>
                 </div>
                 <div className = "form"> Please fill in the following information: <hr/>
-                    <div className = "form-group" style={{"outline-color": "green"}}>
+                    <div className = "form-group" style={{"outlineColor": "green"}}>
                             {this.nameField()}
                             <input type="text" name="name" placeholder="Name" value={this.state.value} onChange={this.handleChange} required/>
                         </div>

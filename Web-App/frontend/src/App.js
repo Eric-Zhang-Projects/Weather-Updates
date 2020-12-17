@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Login, Register, About } from "./components/login";
+import { Login, Register, About, ForgotPassword } from "./components/login";
 import { Home, Account, UpdateInfo, DeleteAccount, Logout, Unauthorized, SearchResults, WeatherResults, Notifications } from "./components/dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +14,7 @@ function App() {
           <Route exact path = '/' component = {About}/>
           <Route path = '/login' component = {Login}/>
           <Route path = '/register' component = {Register}/>
+          <Route path = '/forgotpassword' component = {ForgotPassword}/>
           <Route path = '/unauthorized' component = {Unauthorized}/>
           <ProtectedRoute path = '/dashboard' component = {Home}/>
           <ProtectedRoute path = '/searchResults' component = {SearchResults}/>

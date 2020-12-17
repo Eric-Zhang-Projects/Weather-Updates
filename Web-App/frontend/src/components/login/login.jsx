@@ -7,8 +7,6 @@ import Navbar from '../navbar/Navbar';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
-
-
 export class Login extends React.Component {
 
     constructor(props){
@@ -101,6 +99,8 @@ export class Login extends React.Component {
             <Button type="button" className="btn" onClick={this.handleSubmit}>
                 Login!
             </Button>
+            <hr/>
+            <a href = "/forgotpassword" style={{cursor: 'pointer'}}>Forgot Password?</a>
             </div>
             <div className = "alert"><this.BadCredentialsAlert/></div>
 

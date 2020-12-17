@@ -31,7 +31,6 @@ public class EmailService {
         "<hr/>" +
         "<p><a href = 'http://localhost:3000/login'>Click here to cancel alerts</a></p>"
         ;
-        
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
             helper.setFrom("weatherupdater-noreply@gmail.com");
@@ -41,7 +40,25 @@ public class EmailService {
         } catch (Exception e){
             System.out.println("Failed to create message");
         }
+        javaMailSender.send(message);
+    }
 
+    public void sendForgotPasswordEmail(String to){
+        MimeMessage message = javaMailSender.createMimeMessage();
+        String htmlMessage =
+        "<h1>Greetings from the Weather-Updater!</h1>" +
+        "<p>Click the link below to update your login credentials:</p>" + 
+        "<p><a href = 'http://localhost:3000/resetcredentials'>Reset Login Info</a></p>"
+        ;
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+            helper.setFrom("weatherupdater-noreply@gmail.com");
+            helper.setTo(to);
+            helper.setSubject("Reset your Weather Updater Login Info");
+            helper.setText(htmlMessage, true);
+        } catch (Exception e){
+            System.out.println("Failed to create message");
+        }
         javaMailSender.send(message);
     }
 }

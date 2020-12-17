@@ -1,11 +1,15 @@
 package com.example.backend.Services;
 
+import java.util.Objects;
+
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.AuthenticationRequest;
+import com.example.backend.Requests.ForgotPasswordRequest;
 import com.example.backend.Responses.AuthenticationResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.User;
+import com.example.backend.Services.Helpers.EmailService;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
@@ -36,6 +40,9 @@ public class LoginController {
 
     @Autowired
     private ExistingUserCheck existingUserCheck;
+
+    @Autowired
+    private EmailService emailSerivce;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity <?> Register(@RequestBody User user) {
@@ -86,5 +93,27 @@ public class LoginController {
         authenticationResponse.setJwt(jwt);
         return ResponseEntity.ok().body(authenticationResponse);
     }
+
+    @RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
+    public ResponseEntity<?> ForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest){
+        System.out.println("hit forgot password for email: " + forgotPasswordRequest.getEmail());
+        if(Objects.nonNull(usersRepo.findByEmail(forgotPasswordRequest.getEmail()))){
+            try{
+                emailSerivce.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
+                return ResponseEntity.ok("Success!");
+            } catch (Exception e){
+                String simpleError = "There was an error trying to send you the recovery email.";
+                if (e.getMessage().contains("Invalid Address")){
+                    simpleError = "The provided email address was invalid. Please try again.";
+                }
+                return ResponseEntity.ok(simpleError);
+            }
+        } else {
+            System.out.println("not found");
+            return ResponseEntity.ok("No email was detected in our records.");
+        }
+
+    }
+       
     
 }
