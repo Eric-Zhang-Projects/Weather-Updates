@@ -29,7 +29,7 @@ public class EmailService {
         "<p>if the weather suddenly changes to the following condition(s):</p>" +
         "<p><b>" + conditions + "</b></p>" +
         "<hr/>" +
-        "<p><a href = 'http://localhost:3000/login'>Click here to cancel alerts</a></p>"
+        "<p><a href = 'http://localhost:3000/cancelnotifications'>Click here to cancel alerts</a></p>"
         ;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
@@ -48,7 +48,7 @@ public class EmailService {
         String htmlMessage =
         "<h1>Greetings from the Weather-Updater!</h1>" +
         "<p>Click the link below to update your login credentials:</p>" + 
-        "<p><a href = 'http://localhost:3000/resetcredentials'>Reset Login Info</a></p>"
+        "<p><a href = 'http://localhost:3000/confirmEmail'>Reset Login Info</a></p>"
         ;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");

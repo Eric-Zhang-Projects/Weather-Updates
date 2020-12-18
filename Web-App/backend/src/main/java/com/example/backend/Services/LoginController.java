@@ -6,6 +6,7 @@ import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.AuthenticationRequest;
 import com.example.backend.Requests.ForgotPasswordRequest;
+import com.example.backend.Requests.ResetPasswordRequest;
 import com.example.backend.Responses.AuthenticationResponse;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.User;
@@ -100,7 +101,7 @@ public class LoginController {
         if(Objects.nonNull(usersRepo.findByEmail(forgotPasswordRequest.getEmail()))){
             try{
                 emailSerivce.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
-                return ResponseEntity.ok("Success!");
+                return ResponseEntity.ok("Success");
             } catch (Exception e){
                 String simpleError = "There was an error trying to send you the recovery email.";
                 if (e.getMessage().contains("Invalid Address")){
@@ -112,8 +113,43 @@ public class LoginController {
             System.out.println("not found");
             return ResponseEntity.ok("No email was detected in our records.");
         }
-
     }
-       
+
+    @RequestMapping(value = "/confirmemail", method = RequestMethod.POST)
+    public ResponseEntity<?> ConfirmEmail(@RequestBody ForgotPasswordRequest confirmEmailRequest){
+        System.out.println("hit confirm email");
+        if (Objects.nonNull(usersRepo.findByEmail(confirmEmailRequest.getEmail()))){
+            return ResponseEntity.ok("success");
+        }
+        return ResponseEntity.ok("This email was not found in our records. Please try again.");
+    }
+
+    @RequestMapping(value = "/resetpassword", method = RequestMethod.POST)
+    public ResponseEntity<?> ResetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        System.out.println("hit reset password");
+        UsersDocument usersDocument = usersRepo.findByEmail(resetPasswordRequest.getEmail());
+        DuplicateUserError duplicateUserError = existingUserCheck.findDuplicateUsers(resetPasswordRequest.getNewUsername(), null);
+        if (duplicateUserError.getDuplicateUsername()==null){
+            usersDocument.setUsername(resetPasswordRequest.getNewUsername());
+            usersDocument.setPassword(resetPasswordRequest.getNewPassword());
+            usersRepo.save(usersDocument);
+            return ResponseEntity.ok("success");
+        }
+        return ResponseEntity.ok(duplicateUserError.getDuplicateUsername());
+    }
     
+    @RequestMapping(value = "/cancelnotifications", method = RequestMethod.POST)
+    public ResponseEntity<?> CancelNotifications(@RequestBody ForgotPasswordRequest cancelNotificationsRequest){
+        UsersDocument usersDocument = usersRepo.findByEmail(cancelNotificationsRequest.getEmail());
+        if (Objects.nonNull(usersDocument)){
+            usersDocument.setSendNotifications("false");
+            usersDocument.setNotificationCity("");
+            usersDocument.setNotificationState("");
+            usersDocument.setNotificationConditions("");
+            usersRepo.save(usersDocument);
+            return ResponseEntity.ok("success");
+        } 
+        return ResponseEntity.ok("This email was not found in our records. Please try again");
+    }
+
 }

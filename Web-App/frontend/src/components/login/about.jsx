@@ -13,6 +13,7 @@ export class About extends React.Component {
             <hr/>
             <ul style={{"": "left"}}>
                 <li>cancel notifications from email</li>
+                <li>confirm email can confirm any email and reset password for anyones account</li>
                 <li> create lambda with cron job</li>
                 <hr/>
                 <li> forgot password</li>

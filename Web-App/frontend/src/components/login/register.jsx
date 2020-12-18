@@ -60,7 +60,6 @@ export class Register extends React.Component {
             })
         }
         return passed;
-
     }
 
     showSuccessAlert = () =>{
