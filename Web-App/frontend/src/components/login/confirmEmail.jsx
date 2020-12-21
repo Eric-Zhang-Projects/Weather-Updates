@@ -4,7 +4,6 @@ import axios from "axios";
 import { BASE_URL } from "../../constants.json";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import SweetAlert from 'react-bootstrap-sweetalert';
 
 export class ConfirmEmail extends React.Component {
 

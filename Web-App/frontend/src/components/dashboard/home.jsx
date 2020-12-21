@@ -5,7 +5,6 @@ import { getJwt } from '../helpers/jwtHelper';
 import NavbarLoggedIn from '../navbar/NavbarLoggedIn';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import { createBrowserHistory } from 'history';
 import Card from 'react-bootstrap/Card';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';

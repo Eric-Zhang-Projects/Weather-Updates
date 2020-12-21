@@ -1,13 +1,9 @@
 package com.example.backend.Services.Helpers;
 
 import javax.mail.internet.MimeMessage;
-
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class EmailService {

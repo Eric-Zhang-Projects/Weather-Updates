@@ -61,26 +61,10 @@ export class PageError extends React.Component {
     }
 
     render(){
-
         return (
             <div>
             {this.errorMessage()}
             </div>
         )
-
-        // return (
-        //     <div> 
-        //     <NavbarLoggedIn/>
-        //     <div className = "page-error-base">
-        //             <div>
-        //             <h1>Whoops!</h1>
-        //             <h5>Looks like you may have skipped a step...</h5>
-        //             <hr/>
-        //             <Button type="button" className="btn" onClick={this.handleClick}>Back to Dashboard</Button>     
-        //             </div>  
-        //     </div>
-        //     </div>
-        //     )
-
     }
 }

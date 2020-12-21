@@ -1,7 +1,6 @@
 package com.example.backend.Services;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.example.backend.Documents.UsersDocument;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;

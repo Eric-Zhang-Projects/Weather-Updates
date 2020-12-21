@@ -7,7 +7,6 @@ import com.example.backend.Repo.UsersRepo;
 import com.example.backend.Requests.GetWeatherForCityRequest;
 import com.example.backend.Responses.DuplicateUserError;
 import com.example.backend.Responses.UpdateUser;
-import com.example.backend.Responses.WeatherApiResponses.ApiForecastResponse;
 import com.example.backend.Services.Helpers.ExistingUserCheck;
 import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.cache.CityDataCache;

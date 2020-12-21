@@ -5,7 +5,7 @@ import { getJwt } from '../helpers/jwtHelper';
 import Button from 'react-bootstrap/Button';
 import { createBrowserHistory } from 'history';
 import NavbarLoggedIn from "../navbar/NavbarLoggedIn";
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+// import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import Card from 'react-bootstrap/Card';
 import sun from "../../images/sun_128.png";
