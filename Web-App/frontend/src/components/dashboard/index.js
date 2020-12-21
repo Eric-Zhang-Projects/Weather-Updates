@@ -2,6 +2,7 @@ import "./dashboardStyles.scss";
 import "./accountStyles.css";
 import "./weatherStyles.css";
 import "./notificationStyles.css";
+import "./pageErrorStyles.css";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -14,3 +15,4 @@ export { Logout } from "./logout";
 export { UpdateInfo } from "./updateInfo";
 export { DeleteAccount } from "./deleteAccount";
 export { Unauthorized } from "./unauthorized";
+export { PageError } from "./pageError";

@@ -76,14 +76,18 @@ export class UpdateInfo extends React.Component {
         const jwt = getJwt();
         console.log('passed in jwt:\n' + jwt);
 
-        const history = createBrowserHistory();
-        const location = history.location;
-        this.setState({
-            oldUsername: location.state.state.username, 
-            oldPassword: location.state.state.password,
-            oldName: location.state.state.name,
-            oldEmail: location.state.state.email
-        })
+        try{
+            const history = createBrowserHistory();
+            const location = history.location;
+            this.setState({
+                oldUsername: location.state.state.username, 
+                oldPassword: location.state.state.password,
+                oldName: location.state.state.name,
+                oldEmail: location.state.state.email
+            })
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "true"});
+        }
         
     }
 

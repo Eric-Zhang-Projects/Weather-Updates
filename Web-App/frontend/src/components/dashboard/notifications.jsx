@@ -38,22 +38,26 @@ export class Notifications extends React.Component {
 
     componentDidMount = () => {
         const jwt = getJwt();
-        const history = createBrowserHistory();
-        const location = history.location;
-        this.setState({
-            cityName: location.state.cityName,
-            cityState: location.state.cityState
-        })
-        axios.get(`${BASE_URL}/getEmail`, 
-        { headers: {'Authorization': `Bearer ${jwt}`}})
-        .then( result => {
-            console.log("Got email");
+        try{
+            const history = createBrowserHistory();
+            const location = history.location;
             this.setState({
-                email: result.data
+                cityName: location.state.cityName,
+                cityState: location.state.cityState
             })
-        }).catch(err => {
-          console.log(err.messasge);
-      });
+            axios.get(`${BASE_URL}/getEmail`, 
+            { headers: {'Authorization': `Bearer ${jwt}`}})
+            .then( result => {
+                console.log("Got email");
+                this.setState({
+                    email: result.data
+                })
+            }).catch(err => {
+            console.log(err.messasge);
+        });
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "true"});
+        }
     }
 
     toggleSnow = () =>{

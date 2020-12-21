@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Login, Register, About, ForgotPassword , ResetPassword, ConfirmEmail, CancelNotifications } from "./components/login";
-import { Home, Account, UpdateInfo, DeleteAccount, Logout, Unauthorized, SearchResults, WeatherResults, Notifications } from "./components/dashboard";
+import { Home, Account, UpdateInfo, DeleteAccount, Logout, Unauthorized, SearchResults, WeatherResults, Notifications, PageError } from "./components/dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,6 +19,7 @@ function App() {
           <Route path = '/resetpassword' component = {ResetPassword}/>
           <Route path = '/unauthorized' component = {Unauthorized}/>
           <Route path = '/cancelnotifications' component = {CancelNotifications}/>
+          <Route path = '/pageerror' component = {PageError}/>
           <ProtectedRoute path = '/dashboard' component = {Home}/>
           <ProtectedRoute path = '/searchResults' component = {SearchResults}/>
           <ProtectedRoute path = '/weatherResults' component = {WeatherResults}/>

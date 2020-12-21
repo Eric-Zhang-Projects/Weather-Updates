@@ -24,12 +24,13 @@ export class ResetPassword extends React.Component {
     componentDidMount = () => {
         const history = createBrowserHistory();
         const location = history.location;
-        if (location.state.email === null){
-            this.props.history.push('/unauthorized');
+        try {
+            this.setState({
+                email: location.state.email,
+            })
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "false"});
         }
-        this.setState({
-            email: location.state.email,
-        })
     }
 
     submit = () => {

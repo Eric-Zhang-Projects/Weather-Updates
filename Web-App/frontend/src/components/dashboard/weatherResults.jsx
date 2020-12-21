@@ -35,25 +35,29 @@ export class WeatherResults extends React.Component {
         const jwt = getJwt();
         const history = createBrowserHistory();
         const location = history.location;
-        this.setState({
-            cityName: location.state.cityName,
-            cityState: location.state.cityState,
-            setUpNotificationSuccess: location.state.setUpNotificationSuccess
-        })
-        axios.post(`${BASE_URL}/getWeatherForCity`, 
-        {cityName: location.state.cityName,
-        cityState: location.state.cityState},
-        { headers: {'Authorization': `Bearer ${jwt}`}})
-        .then( result => {
+        try {
             this.setState({
-                dailyForecast: result.data.dayResponse,
-                weeklyForecast: result.data.forecastResponse
+                cityName: location.state.cityName,
+                cityState: location.state.cityState,
+                setUpNotificationSuccess: location.state.setUpNotificationSuccess
             })
-        console.log("daily: " + JSON.stringify(this.state.dailyForecast));
-        console.log("forecast: " + JSON.stringify(this.state.weeklyForecast));
-        }).catch(err => {
-          console.log(err.messasge);
-      });
+            axios.post(`${BASE_URL}/getWeatherForCity`, 
+            {cityName: location.state.cityName,
+            cityState: location.state.cityState},
+            { headers: {'Authorization': `Bearer ${jwt}`}})
+            .then( result => {
+                this.setState({
+                    dailyForecast: result.data.dayResponse,
+                    weeklyForecast: result.data.forecastResponse
+                })
+            console.log("daily: " + JSON.stringify(this.state.dailyForecast));
+            console.log("forecast: " + JSON.stringify(this.state.weeklyForecast));
+            }).catch(err => {
+              console.log(err.messasge);
+          });
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "true"});
+        }
     }
 
     weatherImg = (descriptions) => {

@@ -23,21 +23,25 @@ constructor(props){
         const history = createBrowserHistory();
         const location = history.location;
         const citiesList = [];
-        this.setState({cityName: location.state.cityName});
-        console.log(this.state.cityName);
-        location.state.cities.map((city) => {
-            return citiesList.push(city);
-        });
-        console.log(citiesList);
-        this.setState(state =>{
-            //const cities = [...state.cities, citiesList];
-            const cities = state.cities.concat(citiesList);
-            console.log(cities);
-            return {
-                cities,
-            };
-        });
-        console.log(this.state.cities);
+        try{
+            this.setState({cityName: location.state.cityName});
+            console.log(this.state.cityName);
+            location.state.cities.map((city) => {
+                return citiesList.push(city);
+            });
+            console.log(citiesList);
+            this.setState(state =>{
+                //const cities = [...state.cities, citiesList];
+                const cities = state.cities.concat(citiesList);
+                console.log(cities);
+                return {
+                    cities,
+                };
+            });
+            console.log(this.state.cities);
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "true"});
+        }
     }
 
     handleSubmit = (city) => {
