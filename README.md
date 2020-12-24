@@ -7,12 +7,12 @@
     <li>Backend: Spring Boot, Spring Security</li>
     <li>Database: MongoDB</li>
   </ul>
-<li>Security Features:</li>
-  <ul>
-    <li>Spring Security JWT + Web Filter</li>  
-    <li>React Protected Routes</li>  
-    <li>Basic Base64 encryption for URL encoding (reset credentials redirect link)</li> 
-  </ul
+  <li>Security Features:</li>
+    <ul>
+      <li>Spring Security JWT + Web Filter</li>  
+      <li>React Protected Routes</li>  
+      <li>Basic Base64 encryption for URL encoding (reset credentials redirect link)</li> 
+  </ul>
 <li>APIs used:</li> 
   <ul>
     <li>OpenWeatherMap API - 5 day / 3 hour forecast data API: https://openweathermap.org/forecast5</li> 
