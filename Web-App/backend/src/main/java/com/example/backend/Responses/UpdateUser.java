@@ -13,7 +13,7 @@ import lombok.Setter;
 public class UpdateUser {
  
     private String oldUsername;
-    private String oldPassword;
+    //private String oldPassword;
     private String oldName;
     private String oldEmail;
     private String newUsername;

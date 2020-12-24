@@ -13,7 +13,7 @@ export class UpdateInfo extends React.Component {
         super(props);
         this.state= {
             oldUsername: '',
-            oldPassword: '',
+            //oldPassword: '',
             oldEmail: '',
             oldName: '',
             newUsername: '',
@@ -81,7 +81,7 @@ export class UpdateInfo extends React.Component {
             const location = history.location;
             this.setState({
                 oldUsername: location.state.state.username, 
-                oldPassword: location.state.state.password,
+                //oldPassword: location.state.state.password,
                 oldName: location.state.state.name,
                 oldEmail: location.state.state.email
             })
@@ -150,7 +150,7 @@ export class UpdateInfo extends React.Component {
             oldName: this.state.oldName,
             oldEmail: this.state.oldEmail,
             oldUsername: this.state.oldUsername,
-            oldPassword: this.state.oldPassword,
+            //oldPassword: this.state.oldPassword,
             newName: this.state.newName,
             newEmail: this.state.newEmail,
             newUsername: this.state.newUsername,
@@ -235,7 +235,7 @@ export class UpdateInfo extends React.Component {
                         </div>
                         <div className = "form-group">
                             <label htmlFor="password">Password</label>
-                            <input type="text" name="newPassword" placeholder={"Current: " + this.state.oldPassword} value={this.state.value} onChange={this.handleChange} required/>
+                            <input type="text" name="newPassword" placeholder={"Current password hidden"} value={this.state.value} onChange={this.handleChange} required/>
                         </div>
                         {/* <div className = "form-group">
                         <div class="d-flex justify-content-between" >

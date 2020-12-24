@@ -39,12 +39,13 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public void sendForgotPasswordEmail(String to){
+    public void sendForgotPasswordEmail(String to, String confirmPasswordUrl){
+        System.out.println("encoded url: " + confirmPasswordUrl);
         MimeMessage message = javaMailSender.createMimeMessage();
         String htmlMessage =
         "<h1>Greetings from the Weather-Updater!</h1>" +
         "<p>Click the link below to update your login credentials:</p>" + 
-        "<p><a href = 'http://localhost:3000/confirmEmail'>Reset Login Info</a></p>"
+        "<p><a href = '" + confirmPasswordUrl + "'>Reset Login Info</a></p>"
         ;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");

@@ -1,5 +1,8 @@
 package com.example.backend.Services;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Objects;
 
 import com.example.backend.Documents.UsersDocument;
@@ -16,8 +19,10 @@ import com.example.backend.Services.SecurityConfiguration.JwtUtil;
 import com.example.backend.Services.SecurityConfiguration.MyUserDetailsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,13 +50,19 @@ public class LoginController {
     @Autowired
     private EmailService emailSerivce;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("${BASE_URL}")
+    private String baseUrl;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity <?> Register(@RequestBody User user) {
         UsersDocument usersDocument = new UsersDocument();
         usersDocument.setName(user.getName());
         usersDocument.setEmail(user.getEmail());
         usersDocument.setUsername(user.getUsername());
-        usersDocument.setPassword(user.getPassword());
+        usersDocument.setPassword(passwordEncoder.encode(user.getPassword()));
         usersDocument.setCity("");
         usersDocument.setState("");
         usersDocument.setSendNotifications("");
@@ -79,20 +90,23 @@ public class LoginController {
         //     throw new Exception("Incorrect username or password", e);
         // }
 
-        if (usersRepo.findByUsernameAndPassword(authenticationRequest.getUsername(), authenticationRequest.getPassword()) == null){
-           System.out.println("Bad Login Credentials");
-            return null;
-        }
+        UsersDocument authUser = usersRepo.findByUsername(authenticationRequest.getUsername());
+
+        if(Objects.nonNull(authUser)){
+            if (passwordEncoder.matches(authenticationRequest.getPassword(), authUser.getPassword())){
+                System.out.println("Valid Login Credentials");
+
+                final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         
-        System.out.println("Valid Login Credentials");
-
-        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
-        final String jwt = jwtUtil.generateToken(userDetails);
-        System.out.println("creating new jwt:" + jwt);
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-        authenticationResponse.setJwt(jwt);
-        return ResponseEntity.ok().body(authenticationResponse);
+                final String jwt = jwtUtil.generateToken(userDetails);
+                System.out.println("creating new jwt:" + jwt);
+                AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+                authenticationResponse.setJwt(jwt);
+                return ResponseEntity.ok().body(authenticationResponse);
+            }
+        }
+        System.out.println("bad log in credentials");
+        return null;   
     }
 
     @RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
@@ -100,7 +114,10 @@ public class LoginController {
         System.out.println("hit forgot password for email: " + forgotPasswordRequest.getEmail());
         if(Objects.nonNull(usersRepo.findByEmail(forgotPasswordRequest.getEmail()))){
             try{
-                emailSerivce.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
+                String url = baseUrl + "/confirmEmail?q=";
+                //String emailEncoded = URLEncoder.encode(forgotPasswordRequest.getEmail(), StandardCharsets.UTF_8.name());
+                String emailBase64 = Base64.getEncoder().encodeToString(forgotPasswordRequest.getEmail().getBytes());
+                emailSerivce.sendForgotPasswordEmail(forgotPasswordRequest.getEmail(), url + emailBase64);
                 return ResponseEntity.ok("Success");
             } catch (Exception e){
                 String simpleError = "There was an error trying to send you the recovery email.";
@@ -117,9 +134,11 @@ public class LoginController {
 
     @RequestMapping(value = "/confirmemail", method = RequestMethod.POST)
     public ResponseEntity<?> ConfirmEmail(@RequestBody ForgotPasswordRequest confirmEmailRequest){
-        System.out.println("hit confirm email");
-        if (Objects.nonNull(usersRepo.findByEmail(confirmEmailRequest.getEmail()))){
-            return ResponseEntity.ok("success");
+        System.out.println("hit confirm email for: " + confirmEmailRequest.getEmail());
+        String decodedEmail = new String(Base64.getDecoder().decode(confirmEmailRequest.getEmail()));
+        System.out.println("decoded: " + decodedEmail);
+        if (Objects.nonNull(usersRepo.findByEmail(decodedEmail))){
+            return ResponseEntity.ok("Success");
         }
         return ResponseEntity.ok("This email was not found in our records. Please try again.");
     }
@@ -127,11 +146,15 @@ public class LoginController {
     @RequestMapping(value = "/resetpassword", method = RequestMethod.POST)
     public ResponseEntity<?> ResetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
         System.out.println("hit reset password");
-        UsersDocument usersDocument = usersRepo.findByEmail(resetPasswordRequest.getEmail());
+        String decodedEmail = new String(Base64.getDecoder().decode(resetPasswordRequest.getEmail()));
+        UsersDocument usersDocument = usersRepo.findByEmail(decodedEmail);
+        if (Objects.isNull(usersDocument)){
+            return ResponseEntity.ok("Did not find email");
+        }
         DuplicateUserError duplicateUserError = existingUserCheck.findDuplicateUsers(resetPasswordRequest.getNewUsername(), null);
         if (duplicateUserError.getDuplicateUsername()==null){
             usersDocument.setUsername(resetPasswordRequest.getNewUsername());
-            usersDocument.setPassword(resetPasswordRequest.getNewPassword());
+            usersDocument.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
             usersRepo.save(usersDocument);
             return ResponseEntity.ok("success");
         }

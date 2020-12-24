@@ -12,7 +12,7 @@ export class Account extends React.Component {
         super(props);
         this.state= {
             username: '',
-            password: '',
+            //password: '',
             email: '',
             name: '',
             city: 'N/A',
@@ -38,7 +38,7 @@ export class Account extends React.Component {
             console.log(result.data.username);
             this.setState({
                 username: result.data.username,
-                password: result.data.password,
+                //password: result.data.password,
                 email: result.data.email,
                 name: result.data.name,
                 city: result.data.city,
@@ -75,7 +75,7 @@ export class Account extends React.Component {
         console.log("state!" + this.state.username);
         this.props.history.push('/updateInfo', { state: {
             username: this.state.username,
-            password: this.state.password,
+            //password: this.state.password,
             email: this.state.email,
             name: this.state.name
         } });
@@ -141,7 +141,6 @@ export class Account extends React.Component {
                 <p> Name: {this.state.name}</p>
                 <p>Email: {this.state.email}</p>
                 <p>Username: {this.state.username}</p>
-                <p>Password: {this.state.password}</p>
                 <hr/>
                 {this.showingNotificationInfo()}
                 <hr/>

@@ -13,6 +13,7 @@ import com.example.backend.cache.CityDataCache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,9 @@ public class DashboardController {
 
     @Autowired
     private CityDataCache cityDataCache;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping("/dashboard")
     public ResponseEntity<?> Dashboard(@RequestHeader("Authorization") String jwt){
@@ -88,7 +92,7 @@ public class DashboardController {
             currentInfo.setUsername(user.getNewUsername());
         }
         if (!user.getNewPassword().equals("")){
-            currentInfo.setPassword(user.getNewPassword());
+            currentInfo.setPassword(passwordEncoder.encode(user.getNewPassword()));
         }
         /*
         case 1. User only updates name, dont want to check existing entries, and just save new info over old info
