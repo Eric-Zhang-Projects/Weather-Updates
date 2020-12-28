@@ -11,8 +11,8 @@
     <ul>
       <li>Spring Security
         <ul>
-        <li>JWT + Web Filter</li>  
-        <li>Spring Security BCrypt One-way Password Encoder</li>  
+        <li>JWT creation + filter</li>  
+        <li>BCrypt One-Way Password Encoder</li>  
         </ul>
       </li>
       <li>React Protected Routes</li>  
