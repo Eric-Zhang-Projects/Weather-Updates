@@ -18,7 +18,7 @@ function App() {
           <Route path = '/confirmemail' component = {ConfirmEmail}/>
           <Route path = '/resetpassword' component = {ResetPassword}/>
           <Route path = '/unauthorized' component = {Unauthorized}/>
-          <Route path = '/cancelnotifications' component = {CancelNotifications}/>
+          <Route path = '/cancelnotificationsbyemail' component = {CancelNotifications}/>
           <Route path = '/pageerror' component = {PageError}/>
           <ProtectedRoute path = '/dashboard' component = {Home}/>
           <ProtectedRoute path = '/searchResults' component = {SearchResults}/>

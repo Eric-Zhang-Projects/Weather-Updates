@@ -14,7 +14,7 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendMail(String to, String cityName, String cityState, String conditions) {
+    public void sendSetUpNotificationsEmail(String to, String cancelNotificationsUrl, String cityName, String cityState, String conditions) {
 
         //SimpleMailMessage message = new SimpleMailMessage();
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -25,7 +25,7 @@ public class EmailService {
         "<p>if the weather suddenly changes to the following condition(s):</p>" +
         "<p><b>" + conditions + "</b></p>" +
         "<hr/>" +
-        "<p><a href = 'http://localhost:3000/cancelnotifications'>Click here to cancel alerts</a></p>"
+        "<p><a href = '" + cancelNotificationsUrl + "'>Click here to cancel alerts</a></p>"
         ;
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");

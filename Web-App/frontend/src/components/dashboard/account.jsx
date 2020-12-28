@@ -90,7 +90,7 @@ export class Account extends React.Component {
 
     cancelNotifications = () =>{
         const jwt = getJwt();
-        axios.post(`${BASE_URL}/cancelNotifications`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
+        axios.post(`${BASE_URL}/cancelnotifications`, {}, { headers: {'Authorization': `Bearer ${jwt}`}})
         .then(res => {
             console.log(res.data);
             window.location.reload();

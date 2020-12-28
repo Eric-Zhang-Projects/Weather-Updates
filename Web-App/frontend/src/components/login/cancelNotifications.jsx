@@ -2,81 +2,67 @@ import React from "react";
 import Navbar from '../navbar/Navbar';
 import axios from "axios";
 import { BASE_URL } from "../../constants.json";
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import SweetAlert from 'react-bootstrap-sweetalert';
+import warning from "../../images/warning_128.png";
+import check from "../../images/check_128.png";
 
 export class CancelNotifications extends React.Component {
 
     state = {
-        email: '',
-       errorMessage: null,
-       showSuccess: null
+        showResult: null
     }
 
-    handleChange = (event) => {
-        this.setState({[event.target.name]: event.target.value});
+    componentDidMount = () => {
+        try {
+            const encodedEmail = this.props.location.search.substring(3);
+            console.log("confirm encoded email: " + encodedEmail);
+            axios.post(`${BASE_URL}/cancelnotificationsbyemail`, {email: encodedEmail},
+            { headers: { "Content-Type": "application/json; charset=UTF-8" }})
+            .then(res => {
+                console.log("result: " + res.data);
+                if (res.data === "success"){
+                    this.setState({showResult: this.success()})
+                } else {
+                    this.setState({showResult: this.error(res.data)})
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        } catch (e){
+            this.props.history.push('/pageerror', {loggedIn: "false"});
+        } 
     }
 
-    confirmEmail = () => {
-        console.log("email: " + this.state.email);
-        axios.post(`${BASE_URL}/cancelnotifications`, {email: this.state.email},
-        { headers: { "Content-Type": "application/json; charset=UTF-8" }})
-        .then(res => {
-            console.log("Confirm Email status: "  + res.data);
-            if (res.data === "success"){
-                this.setState({
-                    showSuccess: this.showSuccessPopUp()
-                })
-            } else {
-                this.setState({
-                    errorMessage: this.showError(res.data)
-                });
-            }
-        }).catch(error => {
-            console.log(error);
-        //this.props.history.push('/forgotpassword');
-        });
+    success = () => {
+        return (
+            <div>
+                <img alt="" src={check} style={{"width": "128px", "height": "128px", "marginBottom": "24px"}}></img>
+                <div>Success!</div>
+                <div>Your notifications have been canceled.</div>
+            </div>
+        )
     }
 
-    showSuccessPopUp = () =>{
-        return <SweetAlert
-        success
-        confirmBtnText="Ok"
-        confirmBtnBsStyle="danger"
-        title="Notifications Canceled"
-        onConfirm={() => this.props.history.push("/login")}
-        focusCancelBtn
-      >
-    We're sorry to see you go! You can re-set up notifications anytime. Thanks!
-    </SweetAlert>
+    error = (msg) => {
+        return (
+            <div>
+                <img alt="" src={warning} style={{"width": "128px", "height": "128px", "marginBottom": "24px"}}></img>
+                <div>Error!</div>
+                <div>{msg}</div>
+            </div>
+        )
     }
 
-    showError = (message) => {
-        return <div style={{"color": "red"}}>{message}</div>
-    }
 
     render() {
         return <div>
         <Navbar/>     
-        <h1 style={{"fontFamily": "Open Sans, sans-serif", "paddingTop": "7vh"}}>Cancel Notifications</h1>   
-    <div className = "forgot-password-base">
-        <div className = "forgot-password-content">
-        <Form>
-            <Form.Group controlId="formBasicEmail">
-                <Form.Label>Please enter the email address associated with your account to confirm</Form.Label>
-                <Form.Control type="text" placeholder="Enter email" name="email" value={this.state.value} onChange={this.handleChange} required/>
-                <Form.Text className="text-muted">
-                    {this.state.errorMessage}
-                </Form.Text>
-            </Form.Group>
-            <Button variant="primary" onClick={()=>this.confirmEmail()}>
-                Submit
-            </Button>
-        </Form>
-        {this.state.showSuccess}
+        <div className = "forgot-password-base">
+            <div className = "forgot-password-content">
+            {this.state.showResult}
+            <Button style={{"marginTop": "24px"}} onClick={()=>this.props.history.push('/login')}>Back home</Button>
+            </div>
         </div>
-    </div>
-    </div>
+        </div>
     }
 }

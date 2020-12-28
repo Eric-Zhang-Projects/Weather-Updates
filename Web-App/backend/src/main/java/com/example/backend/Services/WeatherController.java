@@ -1,7 +1,9 @@
 package com.example.backend.Services;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.example.backend.Documents.UsersDocument;
 import com.example.backend.Repo.UsCitiesRepo;
@@ -55,6 +57,9 @@ public class WeatherController {
 
     @Autowired
     private EmailService emailSerivce;
+
+    @Value("${BASE_URL}")
+    private String baseUrl;
 
     //Find city entered in home.jsx
     @RequestMapping("/findCity")
@@ -199,7 +204,10 @@ public class WeatherController {
         String username = jwtUtil.extractUsername(jwt.substring(7));
         UsersDocument usersDocument = usersRepo.findByUsername(username);
         try{
-            emailSerivce.sendMail(usersDocument.getEmail(), conditions.getCityName(), conditions.getCityState(), conditions.getConditions());
+            String url = baseUrl + "/cancelnotificationsbyemail?q=";
+                //String emailEncoded = URLEncoder.encode(forgotPasswordRequest.getEmail(), StandardCharsets.UTF_8.name());
+            String emailBase64 = Base64.getEncoder().encodeToString(usersDocument.getEmail().getBytes());
+            emailSerivce.sendSetUpNotificationsEmail(usersDocument.getEmail(), url + emailBase64, conditions.getCityName(), conditions.getCityState(), conditions.getConditions());
             usersDocument.setSendNotifications("true");
             usersDocument.setNotificationConditions(conditions.getConditions());
             usersDocument.setNotificationCity(conditions.getCityName());
@@ -219,7 +227,8 @@ public class WeatherController {
         return "";
     }
 
-    @RequestMapping(value = "/cancelNotifications", method = RequestMethod.POST)
+    //cancel notifications from account page
+    @RequestMapping(value = "/cancelnotifications", method = RequestMethod.POST)
     public ResponseEntity<?> CancelNotifications(@RequestHeader("Authorization") String jwt){
         System.out.println("Cancel notifications");
         String username = jwtUtil.extractUsername(jwt.substring(7));
@@ -230,6 +239,28 @@ public class WeatherController {
         usersDocument.setNotificationState("");
         usersRepo.save(usersDocument);
         return ResponseEntity.ok("Canceled notifications");
+    }
+
+    @RequestMapping(value = "/weatherupdatesforallusers", method = RequestMethod.POST)
+    public ResponseEntity<?> updates(){
+
+        List<UsersDocument> usersList = usersRepo.findAll();
+        try{
+            int count = 0;
+            for (UsersDocument user : usersList){
+                //Ensure API calls dont exceed 60 per minute
+                if (count >= 30){
+                    TimeUnit.SECONDS.sleep(70);
+                    count=0;
+                }
+                //For each user, call api each time, iterate through each in parallel and determine if one contains new conditions
+                count++;
+            }
+        } catch (InterruptedException e){
+            System.out.println(e);
+            Thread.currentThread().interrupt();
+        }
+        return ResponseEntity.ok("Success");
     }
     
 }

@@ -159,18 +159,22 @@ public class LoginController {
         return ResponseEntity.ok(duplicateUserError.getDuplicateUsername());
     }
     
-    @RequestMapping(value = "/cancelnotifications", method = RequestMethod.POST)
+    @RequestMapping(value = "/cancelnotificationsbyemail", method = RequestMethod.POST)
     public ResponseEntity<?> CancelNotifications(@RequestBody ForgotPasswordRequest cancelNotificationsRequest){
-        UsersDocument usersDocument = usersRepo.findByEmail(cancelNotificationsRequest.getEmail());
-        if (Objects.nonNull(usersDocument)){
-            usersDocument.setSendNotifications("false");
-            usersDocument.setNotificationCity("");
-            usersDocument.setNotificationState("");
-            usersDocument.setNotificationConditions("");
-            usersRepo.save(usersDocument);
-            return ResponseEntity.ok("success");
-        } 
-        return ResponseEntity.ok("This email was not found in our records. Please try again");
+        try{
+            String decodedEmail = new String(Base64.getDecoder().decode(cancelNotificationsRequest.getEmail()));
+            UsersDocument usersDocument = usersRepo.findByEmail(decodedEmail);
+            if (Objects.nonNull(usersDocument)){
+                usersDocument.setSendNotifications("false");
+                usersDocument.setNotificationCity("");
+                usersDocument.setNotificationState("");
+                usersDocument.setNotificationConditions("");
+                usersRepo.save(usersDocument);
+                return ResponseEntity.ok("success");
+            }
+            return ResponseEntity.ok("This email was not found in our records. Please try again.");
+        } catch (Exception e){
+            return ResponseEntity.ok("This email was not found in our records. Please try again.");
+        }
     }
-
 }
