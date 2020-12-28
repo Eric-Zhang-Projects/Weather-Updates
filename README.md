@@ -16,7 +16,7 @@
         </ul>
       </li>
       <li>React Protected Routes</li>  
-      <li>Basic Base64 encryption for URL encoding (reset credentials redirect link)</li> 
+      <li>Base64 encryption for URL encoding (reset credentials redirect link)</li> 
   </ul>
 <li>APIs used:</li> 
   <ul>
