@@ -9,7 +9,12 @@
   </ul>
   <li>Security Features:</li>
     <ul>
-      <li>Spring Security JWT + Web Filter</li>  
+      <li>Spring Security
+        <ul>
+        <li>JWT + Web Filter</li>  
+        <li>Spring Security BCrypt One-way Password Encoder</li>  
+        </ul>
+      </li>
       <li>React Protected Routes</li>  
       <li>Basic Base64 encryption for URL encoding (reset credentials redirect link)</li> 
   </ul>
