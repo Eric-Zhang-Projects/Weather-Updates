@@ -270,22 +270,22 @@ export class Notifications extends React.Component {
             conditionString: ''
         })
         if (this.state.snowClicked){
-            this.updateConditionArray("snow");
+            this.updateConditionArray("Snow");
         }
         if (this.state.rainClicked){
-            this.updateConditionArray("rain");
+            this.updateConditionArray("Rain");
         }
         if (this.state.lightningClicked){
-            this.updateConditionArray("lightning");
+            this.updateConditionArray("Lightning");
         }
         if (this.state.windyClicked){
-            this.updateConditionArray("wind");
+            this.updateConditionArray("Wind");
         }
         if (this.state.sunnyClicked){
-            this.updateConditionArray("clear skies");
+            this.updateConditionArray("Clear");
         }
         if (this.state.cloudyClicked){
-            this.updateConditionArray("clouds");
+            this.updateConditionArray("Clouds");
         }
     }
 

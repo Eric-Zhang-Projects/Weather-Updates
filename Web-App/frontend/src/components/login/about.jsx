@@ -12,7 +12,8 @@ export class About extends React.Component {
             To Do:
             <hr/>
             <ul style={{"": "left"}}>
-                <li>send emails if weather changes</li>
+                <li>show popup if overwritting notifications</li>
+                <li>make email sending multithreaded</li>
                 <li> create lambda with cron job</li>
                 <hr/>
                 <li>filter by us vs country</li>

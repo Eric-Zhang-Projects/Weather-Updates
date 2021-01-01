@@ -19,8 +19,8 @@ public class ListData {
     private ArrayList<ListWeather> weather;
     private ListClouds clouds;
     private ListWind wind;
-    //private ListRain rain;
-    //private ListSnow snow;
+    private ListRain rain;
+    private ListSnow snow;
     
     private String visibility;
     private String pop;

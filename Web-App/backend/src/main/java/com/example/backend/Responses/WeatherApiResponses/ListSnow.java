@@ -1,5 +1,7 @@
 package com.example.backend.Responses.WeatherApiResponses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -12,5 +14,7 @@ import lombok.Setter;
 @Component
 public class ListSnow {
     
-    private float test;
+    @JsonProperty("404_StartingWithADigit")
+    private float snow;
+
 }

@@ -46,7 +46,7 @@ public class LoginController {
     private ExistingUserCheck existingUserCheck;
 
     @Autowired
-    private EmailService emailSerivce;
+    private EmailService emailService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -112,10 +112,7 @@ public class LoginController {
         System.out.println("hit forgot password for email: " + forgotPasswordRequest.getEmail());
         if(Objects.nonNull(usersRepo.findByEmail(forgotPasswordRequest.getEmail()))){
             try{
-                String url = baseUrl + "/confirmEmail?q=";
-                //String emailEncoded = URLEncoder.encode(forgotPasswordRequest.getEmail(), StandardCharsets.UTF_8.name());
-                String emailBase64 = Base64.getEncoder().encodeToString(forgotPasswordRequest.getEmail().getBytes());
-                emailSerivce.sendForgotPasswordEmail(forgotPasswordRequest.getEmail(), url + emailBase64);
+                emailService.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
                 return ResponseEntity.ok("Success");
             } catch (Exception e){
                 String simpleError = "There was an error trying to send you the recovery email.";
