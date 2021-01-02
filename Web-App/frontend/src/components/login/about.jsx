@@ -15,6 +15,7 @@ export class About extends React.Component {
                 <li>make email sending multithreaded</li>
                 <li> create lambda with cron job</li>
                 <li>selecting a date with range for weather reporting</li>
+                <li>refactor code into service + controller</li>
                 <hr/>
                 <li>filter by us vs country</li>
             </ul>
