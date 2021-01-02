@@ -12,9 +12,9 @@ export class About extends React.Component {
             To Do:
             <hr/>
             <ul style={{"": "left"}}>
-                <li>show popup if overwritting notifications</li>
                 <li>make email sending multithreaded</li>
                 <li> create lambda with cron job</li>
+                <li>selecting a date with range for weather reporting</li>
                 <hr/>
                 <li>filter by us vs country</li>
             </ul>

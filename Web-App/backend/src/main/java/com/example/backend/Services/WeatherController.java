@@ -193,6 +193,13 @@ public class WeatherController {
         return ResponseEntity.ok(email);
     }
 
+    @RequestMapping("/overwritenotifications")
+    public ResponseEntity<?> OverwriteNotifications(@RequestHeader("Authorization") String jwt){
+        System.out.println("Checking for existing notifications");
+        String username = jwtUtil.extractUsername(jwt.substring(7));
+        return ResponseEntity.ok(usersRepo.findByUsername(username).getSendNotifications().trim());
+    }
+
     @RequestMapping(value = "/setNotifications", method = RequestMethod.POST)
     public ResponseEntity<?> SetNotifications(@RequestHeader("Authorization") String jwt, @RequestBody NotificationRequest conditions){
         System.out.println("Set up notifications for: " + conditions.getConditions());
@@ -213,10 +220,6 @@ public class WeatherController {
             }
             return ResponseEntity.ok(simpleError);
         }
-    }
-
-    public String formatConditions(){
-        return "";
     }
 
     //cancel notifications from account page

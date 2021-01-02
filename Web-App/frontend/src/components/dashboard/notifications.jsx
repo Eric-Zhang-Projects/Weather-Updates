@@ -290,26 +290,61 @@ export class Notifications extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        if(prevState.conditionString!==this.state.conditionString){
+        if(prevState.conditionString!==this.state.conditionString && this.state.conditionString!==""){
             console.log("state change");
-            this.setState({showConfirmation: this.showConfirmationPopUp()});
+            this.showConfirmationPopUp();
         }
     }
 
     showConfirmationPopUp = () =>{
+        const jwt = getJwt();
+        axios.get(`${BASE_URL}/overwritenotifications`,
+            {headers: {'Authorization': `Bearer ${jwt}`}}
+        ).then (res => {
+            console.log("overwrite existing notis? " + res.data);
+            if (res.data === true){
+                this.setState({showConfirmation: this.showOverwriteNotificationConfirmationPopup()});
+            } else {
+                this.setState({showConfirmation: this.showNewNotificationConfrimationPopup()});     
+            }
+        }).catch(error =>{
+            this.setState({
+                showConfirmation: false,
+                showEmailFailure: this.showEmailFailurePopup("Error")})
+        });
+    }
+
+    showNewNotificationConfrimationPopup = () => {
         return <SweetAlert
-        success
-        showCancel
-        confirmBtnText="Yes, set up notifications"
-        confirmBtnBsStyle="danger"
-        title="Set up notifications?"
-        onConfirm={() => this.confirmNotifications()}
-        onCancel={() => this.setState({showConfirmation: false})}
-        focusCancelBtn
-      >
-    This will confirm that you will recieve notifications for if weather suddenly has:
-    <p>{this.state.conditionString}</p>
-    </SweetAlert>
+            success
+            showCancel
+            confirmBtnText="Yes, set up notifications"
+            confirmBtnBsStyle="danger"
+            title="Set up notifications?"
+            onConfirm={() => this.confirmNotifications()}
+            onCancel={() => this.setState({showConfirmation: false})}
+            focusCancelBtn
+        >
+        This will confirm that you will recieve notifications for if weather suddenly has:
+        <p>{this.state.conditionString}</p>
+        </SweetAlert>
+    }
+
+    showOverwriteNotificationConfirmationPopup = () => {
+        return <SweetAlert
+            warning
+            showCancel
+            confirmBtnText="Yes, set up new notifications"
+            confirmBtnBsStyle="danger"
+            title="Overwrite previous notifications and set up new notifications?"
+            onConfirm={() => this.confirmNotifications()}
+            onCancel={() => this.setState({showConfirmation: false, conditionString: ""})}
+            focusCancelBtn
+        >
+        <p>Its seems like you already have previous notifications set.</p>
+        <p>Confirming here will overwrite your existing notifications and you will now recieve notifications for if weather suddenly has:</p>
+        <p>{this.state.conditionString}</p>
+        </SweetAlert>
     }
 
     showEmailFailurePopup = (error) =>{

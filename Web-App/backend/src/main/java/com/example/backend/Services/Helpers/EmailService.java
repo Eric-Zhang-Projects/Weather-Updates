@@ -36,7 +36,7 @@ public class EmailService {
         "<h1>Greetings from the Weather-Updater!</h1>" +
         "<p>This email is to confirm that you have signed up to recieve weather updates for:</p>" + 
         "<p><b>" + cityName + ", " + cityState + "</b></p>" +
-        "<p>if the weather suddenly changes to the following condition(s):</p>" +
+        "<p>if the weather suddenly changes to one or more of the following condition(s):</p>" +
         "<p><b>" + conditions + "</b></p>" +
         "<hr/>" +
         "<p><a href = '" + createEncodedUrl(to, "/cancelnotificationsbyemail?q=") + "'>Click here to cancel alerts</a></p>"
