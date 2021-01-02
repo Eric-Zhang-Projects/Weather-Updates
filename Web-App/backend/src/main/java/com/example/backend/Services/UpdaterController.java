@@ -112,7 +112,7 @@ public class UpdaterController{
             });
             System.out.println("users map: " + userConditionMap.entrySet());
             try{
-               emailService.sendUpdateEmail(user.getEmail(), user.getNotificationCity(), user.getNotificationState(), user.getNotificationConditions(), userConditionMap.entrySet().toString());
+               emailService.sendUpdateEmail(user.getEmail(), user.getNotificationCity(), user.getNotificationState(), user.getNotificationConditions(), userConditionMap);
             } catch (Exception e){
                 System.out.println("failed to send email to " + user.getEmail());
             }
@@ -145,8 +145,6 @@ public class UpdaterController{
            System.out.println(key);
            sendApiRequest(key.split(",")[0], key.split(",")[1], cityMap.get(key));
         }
-
-
     
         // List<UsersDocument> usersList = usersRepo.findAll();
         // try{

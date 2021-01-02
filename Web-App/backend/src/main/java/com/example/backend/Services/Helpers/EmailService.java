@@ -1,6 +1,9 @@
 package com.example.backend.Services.Helpers;
 
 import java.util.Base64;
+import java.util.Map;
+import java.util.Set;
+
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -50,17 +53,33 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    public void sendUpdateEmail(String to, String cityName, String cityState, String conditions, String details) {
+    public void sendUpdateEmail(String to, String cityName, String cityState, String conditions, Map<String, Map<String, Set<String>>> userConditionMap) {
         MimeMessage message = javaMailSender.createMimeMessage();
+        String details = "";
+        for (String key : userConditionMap.keySet()){
+            details +=
+            "<p><u>" + key + "</u></p>";
+            for (String key1 : userConditionMap.get(key).keySet()){
+                String dates = "";
+                for (String date : userConditionMap.get(key).get(key1)){
+                    String dateTemp1 = date.substring(5).replace("-","/");
+                    // 01/05 -> 1/05
+                    if (Integer.parseInt(dateTemp1.split("/")[0]) < 10){
+                        dateTemp1 = dateTemp1.substring(1);
+                    }
+                    dates += dateTemp1 + ", ";
+                }
+                details += 
+                "<p>" + key1 + ": " + dates.substring(0,dates.length()-2) + "</p>";
+            }
+            details += "<hr/>";
+        }
+        System.out.println("details: " + details);
         String htmlMessage =
         "<h1>Updates from the Weather-Updater!</h1>" +
-        "<p>This email is to alert you that for your location of:</p>" + 
-        "<p><b>" + cityName + ", " + cityState + ",</b></p>" +
-        "<p>that the weather has now changed to match your request condition(s) of:</p>" +
-        "<p><b>" + conditions + "</b></p>" +
+        "<now><b>" + cityName + ", " + cityState + "</b> now forecasts one or more of your selected conditions (<b>" + conditions + ")</b></p>" +
         "<p>Details:</p>" +
         "<p>" + details +"</p>" +
-        "<hr/>" +
         "<p><a href = '" + createEncodedUrl(to, "/cancelnotificationsbyemail?q=") + "'>Click here to cancel alerts</a></p>"
         ;
         try {
