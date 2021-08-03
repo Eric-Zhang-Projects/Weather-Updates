@@ -1,0 +1,22 @@
+version: '3'
+services:
+    weather-updates-frontend-production:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        # Nginx runs on port 80
+        ports:
+          # Target Port : Origin Port, ie 2374:80
+          - '80:80'
+        volumes:
+            []
+
+
+#   weather-updates-frontend-dev:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - '3000:3000'
+#     volumes:
+#         []
